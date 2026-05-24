@@ -1,0 +1,289 @@
+godotdrv.o: godotdrv.c ../../src/vice.h ../../src/config.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdio.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/endian.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_endian.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/select.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_sigset.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timeval.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/timespec.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timespec.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_pthreadtypes.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/sched.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/stdio.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/string.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/strings.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/string.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdlib.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/stdlib.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/alloca.h \
+ ../../src/arch/raspi/archdep.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/dirent.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/dirent.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/libs/circle/addon/fatfs/ff.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/libs/circle/addon/fatfs/ffconf.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h \
+ ../../src/arch/shared/archapi.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stdbool.h \
+ ../../src/arch/shared/archdep_defs.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/inttypes.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/limits.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/syslimits.h \
+ /usr/include/newlib/limits.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/limits.h \
+ ../../src/arch/shared/archdep_access.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/unistd.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/unistd.h \
+ ../../src/arch/shared/archdep_boot_path.h \
+ ../../src/arch/shared/archdep_cbmfont.h \
+ ../../src/arch/shared/archdep_chdir.h \
+ ../../src/arch/shared/archdep_close.h \
+ ../../src/arch/shared/archdep_create_user_cache_dir.h \
+ ../../src/arch/shared/archdep_create_user_config_dir.h \
+ ../../src/arch/shared/archdep_create_user_state_dir.h \
+ ../../src/arch/shared/archdep_current_dir.h \
+ ../../src/arch/shared/archdep_default_autostart_disk_image_file_name.h \
+ ../../src/arch/shared/archdep_default_fliplist_file_name.h \
+ ../../src/arch/shared/archdep_default_joymap_file_name.h \
+ ../../src/arch/shared/archdep_default_logfile.h \
+ ../../src/arch/shared/archdep_default_logger.h \
+ ../../src/arch/shared/archdep_default_portable_resource_file_name.h \
+ ../../src/arch/shared/archdep_default_resource_file_name.h \
+ ../../src/arch/shared/archdep_default_rtc_file_name.h \
+ ../../src/arch/shared/archdep_default_sysfile_pathlist.h \
+ ../../src/arch/shared/archdep_dir.h \
+ ../../src/arch/shared/archdep_ethernet_available.h \
+ ../../src/arch/shared/archdep_exit.h \
+ ../../src/arch/shared/archdep_expand_path.h \
+ ../../src/arch/shared/archdep_extra_title_text.h \
+ ../../src/arch/shared/archdep_fdopen.h \
+ ../../src/arch/shared/archdep_file_exists.h \
+ ../../src/arch/shared/archdep_file_is_blockdev.h \
+ ../../src/arch/shared/archdep_file_is_chardev.h \
+ ../../src/arch/shared/archdep_file_size.h \
+ ../../src/arch/shared/archdep_filename_parameter.h \
+ ../../src/arch/shared/archdep_fix_permissions.h \
+ ../../src/arch/shared/archdep_fix_streams.h \
+ ../../src/arch/shared/archdep_fseeko.h ../../src/types.h \
+ ../../src/vice.h ../../src/arch/shared/archdep_ftello.h \
+ ../../src/arch/shared/archdep_get_current_drive.h \
+ ../../src/arch/shared/archdep_get_runtime_info.h \
+ ../../src/arch/shared/archdep_get_vice_datadir.h \
+ ../../src/arch/shared/archdep_get_vice_docsdir.h \
+ ../../src/arch/shared/archdep_get_vice_drivesdir.h \
+ ../../src/arch/shared/archdep_get_vice_hotkeysdir.h \
+ ../../src/arch/shared/archdep_get_vice_machinedir.h \
+ ../../src/arch/shared/archdep_getcwd.h \
+ ../../src/arch/shared/archdep_home_path.h \
+ ../../src/arch/shared/archdep_icon_path.h \
+ ../../src/arch/shared/archdep_is_haiku.h \
+ ../../src/arch/shared/archdep_is_macos_bindist.h \
+ ../../src/arch/shared/archdep_is_windows_nt.h \
+ ../../src/arch/shared/archdep_kbd_get_host_mapping.h \
+ ../../src/arch/shared/archdep_list_drives.h \
+ ../../src/arch/shared/archdep_make_backup_filename.h \
+ ../../src/arch/shared/archdep_mkdir.h \
+ ../../src/arch/shared/archdep_mkstemp_fd.h \
+ ../../src/arch/shared/archdep_network.h \
+ ../../src/arch/shared/archdep_open_default_log_file.h \
+ ../../src/arch/shared/archdep_path_is_relative.h \
+ ../../src/arch/shared/archdep_program_name.h \
+ ../../src/arch/shared/archdep_program_path.h \
+ ../../src/arch/shared/archdep_quote_parameter.h \
+ ../../src/arch/shared/archdep_quote_unzip.h \
+ ../../src/arch/shared/archdep_rawnet_capability.h \
+ ../../src/arch/shared/archdep_real_path.h \
+ ../../src/arch/shared/archdep_remove.h \
+ ../../src/arch/shared/archdep_rename.h \
+ ../../src/arch/shared/archdep_require_vkbd.h \
+ ../../src/arch/shared/archdep_rmdir.h \
+ ../../src/arch/shared/archdep_rtc_get_centisecond.h \
+ ../../src/arch/shared/archdep_sanitize_filename.h \
+ ../../src/arch/shared/archdep_set_current_drive.h \
+ ../../src/arch/shared/archdep_set_openmp_wait_policy.h \
+ ../../src/arch/shared/archdep_signals.h \
+ ../../src/arch/shared/archdep_socketpeek.h \
+ ../../src/arch/shared/archdep_sound.h \
+ ../../src/arch/shared/archdep_spawn.h \
+ ../../src/arch/shared/archdep_startup_log_error.h \
+ ../../src/arch/shared/archdep_stat.h \
+ ../../src/arch/shared/archdep_tick.h \
+ ../../src/arch/shared/archdep_tmpnam.h \
+ ../../src/arch/shared/archdep_user_cache_path.h \
+ ../../src/arch/shared/archdep_user_config_path.h \
+ ../../src/arch/shared/archdep_user_state_path.h \
+ ../../src/arch/shared/archdep_usleep.h \
+ ../../src/arch/shared/archdep_xdg.h ../../src/sound.h ../../src/types.h \
+ godotdrv.h ../../src/lib.h ../../src/debug.h ../../src/log.h \
+ ../../src/log.h ../../src/gfxoutput.h ../../src/palette.h \
+ ../../src/screenshot.h ../../src/viewport.h ../../src/util.h nativedrv.h
+../../src/vice.h:
+../../src/config.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdio.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/endian.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_endian.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/select.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_sigset.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timeval.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/timespec.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timespec.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_pthreadtypes.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/sched.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/stdio.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/string.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/strings.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/string.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdlib.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/stdlib.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/alloca.h:
+../../src/arch/raspi/archdep.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/dirent.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/dirent.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/libs/circle/addon/fatfs/ff.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/libs/circle/addon/fatfs/ffconf.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h:
+../../src/arch/shared/archapi.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdbool.h:
+../../src/arch/shared/archdep_defs.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/inttypes.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/limits.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/syslimits.h:
+/usr/include/newlib/limits.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/limits.h:
+../../src/arch/shared/archdep_access.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/unistd.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/unistd.h:
+../../src/arch/shared/archdep_boot_path.h:
+../../src/arch/shared/archdep_cbmfont.h:
+../../src/arch/shared/archdep_chdir.h:
+../../src/arch/shared/archdep_close.h:
+../../src/arch/shared/archdep_create_user_cache_dir.h:
+../../src/arch/shared/archdep_create_user_config_dir.h:
+../../src/arch/shared/archdep_create_user_state_dir.h:
+../../src/arch/shared/archdep_current_dir.h:
+../../src/arch/shared/archdep_default_autostart_disk_image_file_name.h:
+../../src/arch/shared/archdep_default_fliplist_file_name.h:
+../../src/arch/shared/archdep_default_joymap_file_name.h:
+../../src/arch/shared/archdep_default_logfile.h:
+../../src/arch/shared/archdep_default_logger.h:
+../../src/arch/shared/archdep_default_portable_resource_file_name.h:
+../../src/arch/shared/archdep_default_resource_file_name.h:
+../../src/arch/shared/archdep_default_rtc_file_name.h:
+../../src/arch/shared/archdep_default_sysfile_pathlist.h:
+../../src/arch/shared/archdep_dir.h:
+../../src/arch/shared/archdep_ethernet_available.h:
+../../src/arch/shared/archdep_exit.h:
+../../src/arch/shared/archdep_expand_path.h:
+../../src/arch/shared/archdep_extra_title_text.h:
+../../src/arch/shared/archdep_fdopen.h:
+../../src/arch/shared/archdep_file_exists.h:
+../../src/arch/shared/archdep_file_is_blockdev.h:
+../../src/arch/shared/archdep_file_is_chardev.h:
+../../src/arch/shared/archdep_file_size.h:
+../../src/arch/shared/archdep_filename_parameter.h:
+../../src/arch/shared/archdep_fix_permissions.h:
+../../src/arch/shared/archdep_fix_streams.h:
+../../src/arch/shared/archdep_fseeko.h:
+../../src/types.h:
+../../src/vice.h:
+../../src/arch/shared/archdep_ftello.h:
+../../src/arch/shared/archdep_get_current_drive.h:
+../../src/arch/shared/archdep_get_runtime_info.h:
+../../src/arch/shared/archdep_get_vice_datadir.h:
+../../src/arch/shared/archdep_get_vice_docsdir.h:
+../../src/arch/shared/archdep_get_vice_drivesdir.h:
+../../src/arch/shared/archdep_get_vice_hotkeysdir.h:
+../../src/arch/shared/archdep_get_vice_machinedir.h:
+../../src/arch/shared/archdep_getcwd.h:
+../../src/arch/shared/archdep_home_path.h:
+../../src/arch/shared/archdep_icon_path.h:
+../../src/arch/shared/archdep_is_haiku.h:
+../../src/arch/shared/archdep_is_macos_bindist.h:
+../../src/arch/shared/archdep_is_windows_nt.h:
+../../src/arch/shared/archdep_kbd_get_host_mapping.h:
+../../src/arch/shared/archdep_list_drives.h:
+../../src/arch/shared/archdep_make_backup_filename.h:
+../../src/arch/shared/archdep_mkdir.h:
+../../src/arch/shared/archdep_mkstemp_fd.h:
+../../src/arch/shared/archdep_network.h:
+../../src/arch/shared/archdep_open_default_log_file.h:
+../../src/arch/shared/archdep_path_is_relative.h:
+../../src/arch/shared/archdep_program_name.h:
+../../src/arch/shared/archdep_program_path.h:
+../../src/arch/shared/archdep_quote_parameter.h:
+../../src/arch/shared/archdep_quote_unzip.h:
+../../src/arch/shared/archdep_rawnet_capability.h:
+../../src/arch/shared/archdep_real_path.h:
+../../src/arch/shared/archdep_remove.h:
+../../src/arch/shared/archdep_rename.h:
+../../src/arch/shared/archdep_require_vkbd.h:
+../../src/arch/shared/archdep_rmdir.h:
+../../src/arch/shared/archdep_rtc_get_centisecond.h:
+../../src/arch/shared/archdep_sanitize_filename.h:
+../../src/arch/shared/archdep_set_current_drive.h:
+../../src/arch/shared/archdep_set_openmp_wait_policy.h:
+../../src/arch/shared/archdep_signals.h:
+../../src/arch/shared/archdep_socketpeek.h:
+../../src/arch/shared/archdep_sound.h:
+../../src/arch/shared/archdep_spawn.h:
+../../src/arch/shared/archdep_startup_log_error.h:
+../../src/arch/shared/archdep_stat.h:
+../../src/arch/shared/archdep_tick.h:
+../../src/arch/shared/archdep_tmpnam.h:
+../../src/arch/shared/archdep_user_cache_path.h:
+../../src/arch/shared/archdep_user_config_path.h:
+../../src/arch/shared/archdep_user_state_path.h:
+../../src/arch/shared/archdep_usleep.h:
+../../src/arch/shared/archdep_xdg.h:
+../../src/sound.h:
+../../src/types.h:
+godotdrv.h:
+../../src/lib.h:
+../../src/debug.h:
+../../src/log.h:
+../../src/log.h:
+../../src/gfxoutput.h:
+../../src/palette.h:
+../../src/screenshot.h:
+../../src/viewport.h:
+../../src/util.h:
+nativedrv.h:

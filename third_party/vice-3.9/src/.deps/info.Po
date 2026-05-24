@@ -1,0 +1,7 @@
+info.o: info.c vice.h config.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h info.h infocontrib.h
+vice.h:
+config.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h:
+info.h:
+infocontrib.h:

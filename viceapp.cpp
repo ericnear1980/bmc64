@@ -14,6 +14,7 @@
 // limitations under the License.
 
 #include "viceapp.h"
+#include <circle/netdevice.h>
 
 #include "fbl.h"
 
@@ -517,6 +518,9 @@ bool ViceStdioApp::Initialize(void) {
   if (!mUSBHCII.Initialize()) {
     return false;
   }
+
+  // mNet.Initialize() is deferred to circle_boot_complete() so that VICE display
+  // is already running before CDHCPClient and CNetTask start scheduling.
 
   return true;
 }

@@ -289,6 +289,8 @@ public:
         mEMMC(&mInterrupt, &mTimer, &mActLED)
         {}
 
+  CNetSubSystem mNet;
+
   virtual bool Initialize(void);
   virtual void Cleanup(void);
 

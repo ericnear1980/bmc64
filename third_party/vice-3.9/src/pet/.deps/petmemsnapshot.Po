@@ -1,0 +1,91 @@
+petmemsnapshot.o: petmemsnapshot.c ../../src/vice.h ../../src/config.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdio.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/endian.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_endian.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/select.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_sigset.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timeval.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/timespec.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timespec.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_pthreadtypes.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/sched.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/stdio.h \
+ ../../src/autostart.h ../../src/types.h ../../src/vice.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stdbool.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/inttypes.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h \
+ ../../src/kbdbuf.h ../../src/log.h ../../src/mem.h pet.h petmem.h \
+ ../../src/types.h petmemsnapshot.h petrom.h pets.h ../../src/resources.h \
+ ../../src/snapshot.h ../../src/tape.h ../../src/machine.h
+../../src/vice.h:
+../../src/config.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdio.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/endian.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_endian.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/select.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_sigset.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timeval.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/timespec.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timespec.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_pthreadtypes.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/sched.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/stdio.h:
+../../src/autostart.h:
+../../src/types.h:
+../../src/vice.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdbool.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/inttypes.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h:
+../../src/kbdbuf.h:
+../../src/log.h:
+../../src/mem.h:
+pet.h:
+petmem.h:
+../../src/types.h:
+petmemsnapshot.h:
+petrom.h:
+pets.h:
+../../src/resources.h:
+../../src/snapshot.h:
+../../src/tape.h:
+../../src/machine.h:

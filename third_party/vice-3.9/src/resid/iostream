@@ -1,0 +1,11 @@
+#pragma once
+#include <stdio.h>
+namespace std {
+struct ostream_stub {
+    template<typename T> ostream_stub& operator<<(const T&) { return *this; }
+};
+static ostream_stub cout;
+struct endl_t {};
+static endl_t endl;
+template<> ostream_stub& ostream_stub::operator<<<endl_t>(const endl_t&) { return *this; }
+}

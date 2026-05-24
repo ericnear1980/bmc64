@@ -27,8 +27,11 @@ echo Making for pi4
 elif [ "$BOARD" = "pi0" ]
 then
 echo Making for pi0
+elif [ "$BOARD" = "pizero2w" ]
+then
+echo Making for pizero2w
 else
-echo Need arg [pi0|pi2|pi3|pi4]
+echo Need arg [pi0|pi2|pi3|pi4|pizero2w]
 exit
 fi
 
@@ -87,6 +90,10 @@ elif [ "$BOARD" = "pi4" ]
 then
 cat ../../circle_stdlib_patch.diff  | patch -p1
 ./configure --raspberrypi=4
+elif [ "$BOARD" = "pizero2w" ]
+then
+cat ../../circle_stdlib_patch.diff  | patch -p1
+./configure --raspberrypi=3
 else
 echo "I don't know what to do for $BOARD"
 exit
@@ -97,7 +104,7 @@ if [ "$BOARD" = "pi0" ]
 then
 CFLAGS=-DBMC64_REPORT_THROTTLE make -j4
 else
-make -j4
+CPPFLAGS="-I$CIRCLE_HOME/libs/circle/addon/fatfs" make -j4
 if [ "$?" != "0" ]
 then
        exit
@@ -164,16 +171,8 @@ fi
 cd $SRC_DIR/third_party/common
 BOARD=$BOARD make
 
-# Plus4Emu
-cd $SRC_DIR/third_party/plus4emu
-make
-if [ "$?" != "0" ]
-then
-       exit
-fi
-
 # Vice
-cd $SRC_DIR/third_party/vice-3.3
+cd $SRC_DIR/third_party/vice-3.9
 
 if [ "$BOARD" = "pi0" ]
 then
@@ -187,39 +186,58 @@ CXXFLAGS="-std=c++11 -funsafe-math-optimizations -fno-exceptions -fno-rtti -nost
 cd ../..
 done
 
-LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-std=c++11 -O3 -ffreestanding -DAARCH=32 -march=armv6k -mtune=arm1176jzf-s -marm -mfpu=vfp -mfloat-abi=hard -fno-exceptions -fno-rtti -nostdinc++ --specs=nosys.specs" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$CIRCLE_HOME/libs/circle/addon/fatfs -fno-exceptions --specs=nosys.specs -mfloat-abi=hard -ffreestanding -nostdlib -march=armv6k -mtune=arm1176jzf-s -marm -mfpu=vfp -nostdinc" ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdlui --disable-sdlui2 --enable-raspiui --enable-raspilite
+LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-std=c++11 -O3 -ffreestanding -DAARCH=32 -march=armv6k -mtune=arm1176jzf-s -marm -mfpu=vfp -mfloat-abi=hard -fno-exceptions -fno-rtti -nostdinc++ --specs=nosys.specs" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$CIRCLE_HOME/libs/circle/addon/fatfs -fno-exceptions --specs=nosys.specs -mfloat-abi=hard -ffreestanding -nostdlib -march=armv6k -mtune=arm1176jzf-s -marm -mfpu=vfp -nostdinc" ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdl1ui --disable-sdl2ui --disable-gtk3ui --enable-raspiui --enable-raspilite --enable-ethernet
 elif [ "$BOARD" = "pi2" ]
 then
 cd src/resid
 CXXFLAGS="-std=c++11 -funsafe-math-optimizations -fno-exceptions -fno-rtti -nostdinc++ -mfloat-abi=hard -ffreestanding -nostdlib -march=armv7-a -marm -mfpu=neon-vfpv4 --specs=nosys.specs -O3 -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed" LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" ./configure --host=arm-none-eabi
 cd ../..
 
-LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-std=c++11 -O3 -mfloat-abi=hard -ffreestanding -march=armv7-a -marm -mfpu=neon-vfpv4 -fno-exceptions -fno-rtti -nostdinc++ --specs=nosys.specs" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$CIRCLE_HOME/libs/circle/addon/fatfs -fno-exceptions --specs=nosys.specs -mfloat-abi=hard -ffreestanding -nostdlib -march=armv7-a -marm -mfpu=neon-vfpv4 -nostdinc" ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdlui --disable-sdlui2 --enable-raspiui
+LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-std=c++11 -O3 -mfloat-abi=hard -ffreestanding -march=armv7-a -marm -mfpu=neon-vfpv4 -fno-exceptions -fno-rtti -nostdinc++ --specs=nosys.specs" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$CIRCLE_HOME/libs/circle/addon/fatfs -fno-exceptions --specs=nosys.specs -mfloat-abi=hard -ffreestanding -nostdlib -march=armv7-a -marm -mfpu=neon-vfpv4 -nostdinc" ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdl1ui --disable-sdl2ui --disable-gtk3ui --enable-raspiui --enable-ethernet
 elif [ "$BOARD" = "pi3" ]
 then
-LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-O3 -std=c++11 -fno-exceptions -march=armv8-a -mtune=cortex-a53 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$CIRCLE_HOME/libs/circle/addon/fatfs -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -fno-exceptions -march=armv8-a -mtune=cortex-a53 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdlui --disable-sdlui2 --enable-raspiui
+LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-O3 -std=c++11 -fno-exceptions -nostdinc++ -isystem /usr/lib/arm-none-eabi/include -march=armv8-a -mtune=cortex-a53 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$CIRCLE_HOME/libs/circle/addon/fatfs -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -isystem /usr/lib/arm-none-eabi/include -D_POSIX_TIMERS=1 -Wno-incompatible-pointer-types -fno-exceptions -march=armv8-a -mtune=cortex-a53 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" ac_cv_header_math_h=yes ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdl1ui --disable-sdl2ui --disable-gtk3ui --enable-raspiui --enable-ethernet
 elif [ "$BOARD" = "pi4" ]
 then
-LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-O3 -std=c++11 -fno-exceptions -march=armv8-a -mtune=cortex-a72 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$CIRCLE_HOME/libs/circle/addon/fatfs -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -fno-exceptions -march=armv8-a -mtune=cortex-a72 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdlui --disable-sdlui2 --enable-raspiui
+LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-O3 -std=c++11 -fno-exceptions -nostdinc++ -isystem /usr/lib/arm-none-eabi/include -march=armv8-a -mtune=cortex-a72 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$CIRCLE_HOME/libs/circle/addon/fatfs -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -isystem /usr/lib/arm-none-eabi/include -fno-exceptions -march=armv8-a -mtune=cortex-a72 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" ac_cv_header_math_h=yes ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --disable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --disable-sdl1ui --disable-sdl2ui --disable-gtk3ui --enable-raspiui --enable-ethernet
+elif [ "$BOARD" = "pizero2w" ]
+then
+LDFLAGS="-L$CIRCLE_HOME/install/arm-none-circle/lib" CXXFLAGS="-O3 -std=c++11 -fno-exceptions -nostdinc++ -isystem /usr/lib/arm-none-eabi/include -march=armv8-a -mtune=cortex-a53 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" CFLAGS="-O3 -I$COMMON_HOME -I$CIRCLE_HOME/install/arm-none-circle/include/ -I$CIRCLE_HOME/libs/circle/addon/fatfs -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include-fixed -I$ARM_HOME/lib/gcc/arm-none-eabi/$ARM_VERSION/include -isystem /usr/lib/arm-none-eabi/include -D_POSIX_TIMERS=1 -Wno-incompatible-pointer-types -fno-exceptions -march=armv8-a -mtune=cortex-a53 -marm -mfpu=neon-fp-armv8 -mfloat-abi=hard -ffreestanding -nostdlib" ac_cv_header_math_h=yes ac_cv_search_yywrap="none required" ac_cv_prog_lex_yytext_pointer=yes ac_cv_lib_curl_curl_easy_init=no ac_cv_func_socket=yes ac_cv_func_send=yes ac_cv_func_bind=yes ac_cv_func_listen=yes ac_cv_func_gethostbyname=yes ac_cv_func_connect=yes ac_cv_func_recv=yes ac_cv_func_accept=yes ac_cv_header_sys_socket_h=yes ac_cv_header_netinet_in_h=yes ac_cv_header_arpa_inet_h=yes ac_cv_header_netdb_h=yes LEXLIB="" LEX=flex ./configure --host=arm-none-eabi --disable-realdevice --disable-ipv6 --disable-ssi2001 --disable-catweasel --disable-hardsid --disable-parsid --disable-portaudio --disable-ahi --disable-bundle --disable-lame --enable-rs232 --disable-midi --disable-hidmgr --disable-hidutils --without-oss --without-alsa --without-pulse --without-zlib --without-libcurl --without-png --disable-sdl1ui --disable-sdl2ui --disable-gtk3ui --enable-raspiui --enable-ethernet
 else
 echo "I don't know what to do for $BOARD"
 exit
 fi
 
-cd src
-make libarchdep
-if [ "$?" != "0" ]
-then
-       exit
-fi
-make libhvsc
-if [ "$?" != "0" ]
-then
-       exit
-fi
-cd ..
+# Force HAVE_RAWNET on bare-metal: configure can't detect pcap/tuntap but
+# rawnetarch.c provides the Circle implementation.
+sed -i 's|/\* #undef HAVE_RAWNET \*/|#define HAVE_RAWNET 1|' src/config.h
+sed -i 's|/\* #undef HAVE_RS232DEV \*/|#define HAVE_RS232DEV 1|' src/config.h
 
-# These will fail
+cd src/arch/raspi
+make
+if [ "$?" != "0" ]
+then
+       exit
+fi
+cd ../../..
+
+cd src/arch/shared
+make
+if [ "$?" != "0" ]
+then
+       exit
+fi
+cd ../../..
+
+cd src/hvsc
+make
+if [ "$?" != "0" ]
+then
+       exit
+fi
+cd ../../
+
+# These will fail at link but build all needed libraries
 make x64
 make x128
 make xvic
@@ -229,6 +247,15 @@ make xpet
 echo ==============================================================
 echo Link errors above are expected
 echo ==============================================================
+
+# Build libraries not produced by make x64 (or cleaned by it)
+cd src/resid && make && cd ../..
+cd src/c64 && make && cd ../..
+cd src/userport && make && cd ../..
+cd src/imagecontents && make && cd ../..
+cd src/lib/libzmbv && make && cd ../../..
+cd src/arch/raspi && make && cd ../../..
+cd src/arch/raspi/c64 && make && cd ../../../..
 
 cd $SRC_DIR
 make clean

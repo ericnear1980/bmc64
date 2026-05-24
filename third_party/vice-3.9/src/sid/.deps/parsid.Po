@@ -1,0 +1,40 @@
+parsid.o: parsid.c \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/string.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/strings.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/string.h \
+ ../../src/vice.h ../../src/config.h
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/string.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/strings.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/string.h:
+../../src/vice.h:
+../../src/config.h:

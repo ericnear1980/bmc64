@@ -484,7 +484,10 @@ typedef enum {
 
    MENU_VIRTUAL_DEVICES,
    MENU_REU,
-   MENU_REU_SIZE
+   MENU_REU_SIZE,
+   MENU_TFE_ENABLED,
+   MENU_SWIFTLINK_ENABLED,
+   MENU_NETWORK_INFO
 } MenuID;
 
 typedef enum {

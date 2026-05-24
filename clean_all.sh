@@ -10,7 +10,7 @@ fi
 
 SRC_DIR=`pwd`
 
-cd $SRC_DIR/third_party/vice-3.3
+cd $SRC_DIR/third_party/vice-3.9
 make clean
 git status | grep 'deleted:.*doc' | sed 's/deleted:/git checkout /' | sh
 

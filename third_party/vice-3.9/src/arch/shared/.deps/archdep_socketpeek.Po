@@ -1,0 +1,17 @@
+archdep_socketpeek.o: archdep_socketpeek.c ../../../src/vice.h \
+ ../../../src/config.h archdep_socketpeek.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h
+../../../src/vice.h:
+../../../src/config.h:
+archdep_socketpeek.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h:

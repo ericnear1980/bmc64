@@ -38,6 +38,7 @@
 #include <vc4/vchiq/vchiqdevice.h>
 
 #include "fbl.h"
+#include "tftpserver.h"
 
 extern "C" {
 #include "third_party/common/circle.h"
@@ -47,6 +48,8 @@ extern "C" {
 
 class CKernel : public ViceStdioApp {
 public:
+  volatile bool mNetReady;  // set by CNetInitTask after Initialize() succeeds
+
   CKernel(void);
 
   bool Initialize(void) override;

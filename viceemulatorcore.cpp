@@ -22,15 +22,15 @@
 #include "defs.h"
 
 extern "C" {
-#include "third_party/vice-3.3/src/main.h"
+#include "third_party/vice-3.9/src/main.h"
 #include "third_party/common/semaphore.h"
 
 extern void circle_kernel_core_init_complete(int core);
 }
 
-#include "third_party/vice-3.3/src/sid/sid.h"
-#include "third_party/vice-3.3/src/resid/sid.h"
-#include "third_party/vice-3.3/src/resid/filter.h"
+#include "third_party/vice-3.9/src/sid/sid.h"
+#include "third_party/vice-3.9/src/resid/sid.h"
+#include "third_party/vice-3.9/src/resid/filter.h"
 
 ViceEmulatorCore::ViceEmulatorCore(CMemorySystem *pMemorySystem,
                                    int cyclesPerSecond) :
@@ -39,28 +39,9 @@ ViceEmulatorCore::ViceEmulatorCore(CMemorySystem *pMemorySystem,
 #endif
        launch_(false), cyclesPerSecond_(cyclesPerSecond) {
 
-  // These calls only allocate the sampling table. Population is
-  // done by cores 1 and 2 in parellel below.
+  passBandFreq_ = 13230; // 60% — matches menu.c passband setting
 #ifdef ARM_ALLOW_MULTI_CORE
-
-  passBandFreq_ = 19845; // 90%
-  //unsigned clock = circle_get_arm_clock();
-  //if (clock < 1400000000) {
-     // For Pi3 models with a lower clock rate (<= 1.2Ghz)
-     // we must lower the passband freq to avoid stuttering
-     // in the worst case.  This logic must match the passband
-     // percentage we set in menu.c in common dir.
-     passBandFreq_ = 13230; // 60%
-  //}
-
-  reSID::SID::ComputeSamplingTable(cyclesPerSecond_,
-                                   reSID::SAMPLE_RESAMPLE,
-                                   SAMPLE_RATE, passBandFreq_, 0.97,
-                                   0);
-  reSID::SID::ComputeSamplingTable(cyclesPerSecond_,
-                                   reSID::SAMPLE_RESAMPLE_FASTMEM,
-                                   SAMPLE_RATE, passBandFreq_, 0.97,
-                                   0);
+  // VICE 3.9 reSID: sampling tables are allocated on demand; no pre-compute needed
 #endif
 }
 
@@ -93,11 +74,10 @@ void ViceEmulatorCore::RunMainVice(bool wait) {
   printf("Starting emulator main loop\n");
 
 #if defined(RASPI_C64)
-  int argc = 9;
+  // VICE 3.9: -soundsync and -refresh were removed
+  int argc = 5;
   char *argv[] = {
       (char *)"vice", timing_option_, (char *)"-sounddev", (char *)"raspi",
-      (char *)"-soundsync", (char *)"0",
-      (char *)"-refresh", (char *)"1",
       // Unless we disable the video cache, vsync is messed up
       (char *)"+VICIIvcache",
   };
@@ -145,17 +125,14 @@ void ViceEmulatorCore::RunMainVice(bool wait) {
   emu_exit();
 }
 
-// Initializing the filters for each SID model takes quite a bit.
-// This method instantiates a modified Filter object in ReSid.  The
-// modified version lets us initialize both SIDs in parallel on seperate
-// cores.  This saves a lot of boot time since when VICE eventually gets
-// around to initializing the filters, they are already done and opening
-// ReSid is very quick at that point.  See resid/filter.cc for
-// modifications done for BMC64.
-void ViceEmulatorCore::ComputeResidFilter(int model) { reSID::Filter f(model); }
+// VICE 3.9: reSID Filter no longer takes a model argument; filter tables are
+// initialised lazily. ComputeSamplingTable was also removed — sampling tables
+// are allocated on demand by set_sampling_parameters().
+void ViceEmulatorCore::ComputeResidFilter(int model) {
+  // No-op in VICE 3.9
+  (void)model;
+}
 
-// In addition to initializing the filters in parellel during boot, we
-// compute the resampling tables for the two resampling methods.
 void ViceEmulatorCore::Run(unsigned nCore) {
   assert(nCore > 0);
   switch (nCore) {
@@ -163,46 +140,15 @@ void ViceEmulatorCore::Run(unsigned nCore) {
     RunMainVice(true);
     break;
   case 2:
-    // Core 2 will initialize 6581 filter data. Then partition 1
-    // of the resampling tables. Then sleep.
 #ifdef ARM_ALLOW_MULTI_CORE
-    ComputeResidFilter(0);
-    reSID::SID::ComputeSamplingTable(cyclesPerSecond_,
-                                     reSID::SAMPLE_RESAMPLE,
-                                     SAMPLE_RATE, passBandFreq_, 0.97,
-                                     1);
-    reSID::SID::ComputeSamplingTable(cyclesPerSecond_,
-                                     reSID::SAMPLE_RESAMPLE_FASTMEM,
-                                     SAMPLE_RATE, passBandFreq_, 0.97,
-                                     1);
     circle_kernel_core_init_complete(2);
 #endif
     break;
   case 3:
-    // Core 3 will initialize 8580 filter data. Then partition 2
-    // of the resampling tables. Then sleep.
 #ifdef ARM_ALLOW_MULTI_CORE
-    ComputeResidFilter(1);
-    reSID::SID::ComputeSamplingTable(cyclesPerSecond_,
-                                     reSID::SAMPLE_RESAMPLE,
-                                     SAMPLE_RATE, passBandFreq_, 0.97,
-                                     2);
-    reSID::SID::ComputeSamplingTable(cyclesPerSecond_,
-                                     reSID::SAMPLE_RESAMPLE_FASTMEM,
-                                     SAMPLE_RATE, passBandFreq_, 0.97,
-                                     2);
     circle_kernel_core_init_complete(3);
 #endif
     break;
-  }
-
-  if (nCore == 2) {
-     while (true) {
-        sem_dec(&sid_job);
-        sid_job_func(sid_job_psid, sid_job_pbuf, sid_job_nr,
-                     2, &sid_job_delta_t);
-        sem_inc(&sid_done);
-     }
   }
 
 #ifdef ARM_ALLOW_MULTI_CORE

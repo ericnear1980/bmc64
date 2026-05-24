@@ -1,0 +1,46 @@
+sid.o: sid.cc sid.h resid-config.h siddefs.h voice.h wave.h envelope.h \
+ filter8580new.h cassert /usr/include/newlib/assert.h \
+ /usr/include/newlib/_ansi.h /usr/include/newlib/newlib.h \
+ /usr/include/newlib/_newlib_version.h /usr/include/newlib/sys/config.h \
+ /usr/include/newlib/machine/ieeefp.h /usr/include/newlib/sys/features.h \
+ extfilt.h pot.h cmath /usr/include/newlib/math.h \
+ /usr/include/newlib/sys/reent.h /usr/include/newlib/_ansi.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h \
+ /usr/include/newlib/sys/cdefs.h \
+ /usr/include/newlib/machine/_default_types.h \
+ /usr/include/newlib/sys/_types.h /usr/include/newlib/machine/_types.h \
+ /usr/include/newlib/sys/lock.h iostream /usr/include/newlib/stdio.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h \
+ /usr/include/newlib/sys/stdio.h fstream
+sid.h:
+resid-config.h:
+siddefs.h:
+voice.h:
+wave.h:
+envelope.h:
+filter8580new.h:
+cassert:
+/usr/include/newlib/assert.h:
+/usr/include/newlib/_ansi.h:
+/usr/include/newlib/newlib.h:
+/usr/include/newlib/_newlib_version.h:
+/usr/include/newlib/sys/config.h:
+/usr/include/newlib/machine/ieeefp.h:
+/usr/include/newlib/sys/features.h:
+extfilt.h:
+pot.h:
+cmath:
+/usr/include/newlib/math.h:
+/usr/include/newlib/sys/reent.h:
+/usr/include/newlib/_ansi.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h:
+/usr/include/newlib/sys/cdefs.h:
+/usr/include/newlib/machine/_default_types.h:
+/usr/include/newlib/sys/_types.h:
+/usr/include/newlib/machine/_types.h:
+/usr/include/newlib/sys/lock.h:
+iostream:
+/usr/include/newlib/stdio.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h:
+/usr/include/newlib/sys/stdio.h:
+fstream:

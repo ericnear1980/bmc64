@@ -27,6 +27,7 @@
 #ifndef RASPI_UI_H_
 #define RASPI_UI_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #define NUM_MENU_ROOTS 5
@@ -41,7 +42,7 @@
 #define MENU_ID_DO_NOTHING -1
 
 typedef enum menu_item_type {
-  TOGGLE,          // true/false
+  BMC64_TOGGLE,          // true/false
   CHECKBOX,        // on/off
   MULTIPLE_CHOICE, // one selection among a list of options
   BUTTON,          // an action with optional displayable value to hold
@@ -69,7 +70,7 @@ struct menu_item {
   // Symbol on left edge
   int symbol;
 
-  // 0/1 for TOGGLE or CHECKBOX, or range value for RANGE
+  // 0/1 for BMC64_TOGGLE or CHECKBOX, or range value for RANGE
   // index for MULTIPLE_CHOICE
   // cursor position for TEXTFIELD
   int value;
@@ -214,7 +215,7 @@ struct menu_item *ui_push_menu(int w_chars, int h_chars);
 void ui_set_on_value_changed_callback(
     void (*on_value_changed)(struct menu_item *));
 
-void ui_check_key();
+void ui_check_key(void);
 void ui_page_down(void);
 void ui_page_up(void);
 void ui_to_top(void);
@@ -257,4 +258,10 @@ extern uint8_t *raw_video_font;
 // item.
 extern void ui_canvas_reveal_temp(int layer);
 
+extern struct video_canvas_s *ui_get_active_canvas(void);
+extern void ui_dispatch_events(void);
+extern int ui_pause_active(void);
+extern void ui_pause_enable(void);
+extern bool ui_pause_loop_iteration(void);
+extern void ui_pause_disable(void);
 #endif

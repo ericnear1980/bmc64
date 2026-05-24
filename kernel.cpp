@@ -22,8 +22,23 @@
 #include <string.h>
 
 #include <circle/gpiopin.h>
+#include <circle/logger.h>
+#include <circle/usb/smsc951x.h>
 
 CKernel *static_kernel = NULL;
+
+static void PanicHandler(void)
+{
+    char buf[8192];
+    int n = 0;
+    while (n < (int)sizeof(buf) - 1) {
+        int got = CLogger::Get()->Read(buf + n, sizeof(buf) - 1 - n);
+        if (got <= 0) break;
+        n += got;
+    }
+    FILE *f = fopen("PANIC.TXT", "w");
+    if (f) { fwrite(buf, 1, n, f); fclose(f); }
+}
 
 #define MAX_KEY_CODES 128
 #define TICKS_PER_SECOND 1000000L
@@ -344,7 +359,7 @@ long func_to_keycode(int btn_func) {
 }
 
 CKernel::CKernel(void)
-    : ViceStdioApp("vice"), mViceSound(nullptr),
+    : ViceStdioApp("vice"), mNetReady(false), mViceSound(nullptr),
       mNumJoy(emu_get_num_joysticks()),
       mVolume(100), mNumCoresComplete(0),
       mNeedSoundInit(false), mNumSoundChannels(1) {
@@ -740,10 +755,9 @@ ViceApp::TShutdownMode CKernel::Run(void) {
 #ifndef ARM_ALLOW_MULTI_CORE
   mEmulatorCore->LaunchEmulator(mTimingOption);
 #else
-  // This core will do nothing but service interrupts from
-  // usb or gpio.
-  printf("Core 0 idle\n");
-
+  // Core 0 stays in wfi. USB interrupts still fire here.
+  // Network TX is handled by queuing frames and draining from the
+  // USB interrupt context on Core 0.
   asm("dsb\n\t"
       "1: wfi\n\t"
       "b 1b\n\t");
@@ -1196,7 +1210,13 @@ int CKernel::circle_sound_bufferspace(void) {
   return FRAG_SIZE * NUM_FRAGS;
 }
 
-void CKernel::circle_yield(void) { CScheduler::Get()->Yield(); }
+void CKernel::circle_yield(void) {
+  static unsigned nYields = 0;
+  if (++nYields == 1) {
+    FILE *f = fopen("YIELD1.TXT","w"); if(f){fwrite("ok\n",1,3,f);fclose(f);}
+  }
+  CScheduler::Get()->Yield();
+}
 
 void CKernel::MouseStatusHandler(unsigned nButtons, int deltaX, int deltaY) {
   static unsigned int prev_buttons = {0};
@@ -1528,6 +1548,43 @@ void CKernel::circle_boot_complete() {
   }
 
   DisableBootStat();
+
+  CLogger::Get()->RegisterPanicHandler(PanicHandler);
+
+  // Register the SMSC951x RX timer after VCHIQ is stable.
+  // TX uses blocking Transfer() from Core 1, so no TX timer needed.
+  if (CNetDevice::GetNetDevice(0)) {
+    CTimer::Get()->StartKernelTimer(2, CSMSC951xDevice::NetKernelTimer, 0, 0);
+  }
+
+  // CNetInitTask runs on Core 1 (via circle_yield) only to call Initialize()
+  // which waits for PHY link-up (yields cooperatively). Once done, it sets
+  // mNetReady so Core 0's loop starts calling Process() — all USB TX from Core 0.
+  if (CNetDevice::GetNetDevice(0)) {
+    class CNetInitTask : public CTask {
+    public:
+      CNetInitTask(CKernel *pKernel) : CTask(0x4000), m_pKernel(pKernel) {}
+      void Run() override {
+        static const u8 ip[]  = { 192, 168, 80, 164 };
+        static const u8 nm[]  = { 255, 255, 255,  0 };
+        static const u8 gw[]  = { 192, 168, 80,   1 };
+        static const u8 dns[] = { 192, 168, 80,   1 };
+        m_pKernel->mNet.GetConfig()->SetIPAddress(ip);
+        m_pKernel->mNet.GetConfig()->SetNetMask(nm);
+        m_pKernel->mNet.GetConfig()->SetDefaultGateway(gw);
+        m_pKernel->mNet.GetConfig()->SetDNSServer(dns);
+        boolean bOK = m_pKernel->mNet.Initialize(TRUE);
+        if (bOK) {
+          m_pKernel->mNetReady = true;
+          new CTFTPServer(&m_pKernel->mNet);
+        }
+        Terminate();
+      }
+    private:
+      CKernel *m_pKernel;
+    };
+    new CNetInitTask(this);
+  }
 }
 
 int CKernel::circle_alloc_fbl(int layer, int pixelmode, uint8_t **pixels,
@@ -1705,4 +1762,216 @@ void CKernel::circle_set_shader_params(int curvature,
 			output_gamma,
 			sharper,
                         bilinear_interpolation);
+}
+
+// ── Debug logging ────────────────────────────────────────────────────────────
+// Accumulates messages in a static buffer and writes to VICE39_DEBUG.txt.
+// Used by RTL8153/AX88772 drivers and kernel networking code.
+static char s_logbuf[32768];
+static unsigned s_loglen = 0;
+
+void circle_log(const char *msg) {
+  if (!msg) return;
+  unsigned mlen = strlen(msg);
+  if (s_loglen + mlen + 2 < sizeof(s_logbuf)) {
+    memcpy(s_logbuf + s_loglen, msg, mlen);
+    s_loglen += mlen;
+    s_logbuf[s_loglen++] = '\n';
+    s_logbuf[s_loglen] = 0;
+  }
+  FILE *f = fopen("VICE39_DEBUG.txt", "w");
+  if (f) { fwrite(s_logbuf, 1, s_loglen, f); fclose(f); }
+}
+
+void circle_logf(const char *fmt, ...) {
+  char buf[512];
+  va_list args;
+  va_start(args, fmt);
+  vsnprintf(buf, sizeof(buf), fmt, args);
+  va_end(args);
+  circle_log(buf);
+}
+
+// ── Networking — real CSocket-based implementations ──────────────────────────
+// circle_socket_t is a 1-based index into s_Sockets[].
+// All operations run on Core 0 (via the scheduler loop in Run()).
+// Core 1 (VICE) calls these; the socket objects live on the heap.
+
+#include <circle/net/socket.h>
+#include <circle/net/ipaddress.h>
+#include <circle/net/netconfig.h>
+#include <circle/net/dnsclient.h>
+#include <circle/net/in.h>
+#include <circle/string.h>
+#include <circle/macaddress.h>
+#include <circle/netdevice.h>
+#include <circle/usb/smsc951x.h>
+#include <circle/sched/task.h>
+#include <circle/sched/scheduler.h>
+
+#define MAX_CIRCLE_SOCKETS 8
+static CSocket *s_Sockets[MAX_CIRCLE_SOCKETS + 1]; // index 1..MAX
+
+// Per-socket 1-byte peek buffer for can_recv/recv cooperation.
+static int    s_PeekValid[MAX_CIRCLE_SOCKETS + 1];
+static char   s_PeekByte[MAX_CIRCLE_SOCKETS + 1];
+
+static circle_socket_t alloc_socket(CSocket *pSock) {
+  for (int i = 1; i <= MAX_CIRCLE_SOCKETS; i++) {
+    if (!s_Sockets[i]) { s_Sockets[i] = pSock; return (circle_socket_t)i; }
+  }
+  return 0;
+}
+static CSocket *get_socket(circle_socket_t h) {
+  if (h < 1 || h > MAX_CIRCLE_SOCKETS) return nullptr;
+  return s_Sockets[(int)h];
+}
+
+int circle_net_is_up(void) {
+  // IsRunning() asserts m_pDHCPClient != 0 when m_bUseDHCP=TRUE.
+  // mNetReady is set only after Initialize() succeeds with static IP, so
+  // m_bUseDHCP is FALSE by then and IsRunning() is safe to call.
+  if (!static_kernel->mNetReady) return 0;
+  CNetSubSystem *net = CNetSubSystem::Get();
+  return (net && net->IsRunning()) ? 1 : 0;
+}
+
+circle_socket_t circle_net_tcp_server(unsigned short port) {
+  CNetSubSystem *net = CNetSubSystem::Get();
+  if (!net) return 0;
+  CSocket *s = new CSocket(net, IPPROTO_TCP);
+  if (s->Bind(port) < 0 || s->Listen() < 0) { delete s; return 0; }
+  circle_socket_t h = alloc_socket(s);
+  if (!h) { delete s; return 0; }
+  return h;
+}
+
+circle_socket_t circle_net_tcp_accept(circle_socket_t server) {
+  CSocket *srv = get_socket(server);
+  if (!srv) return 0;
+  CIPAddress peer; u16 peerPort;
+  CSocket *client = srv->Accept(&peer, &peerPort);
+  if (!client) return 0;
+  circle_socket_t h = alloc_socket(client);
+  if (!h) { delete client; return 0; }
+  return h;
+}
+
+int circle_net_tcp_connect(circle_socket_t s, const char *host, unsigned short port) {
+  CSocket *sock = get_socket(s);
+  if (!sock || !host) return -1;
+  CIPAddress addr;
+  unsigned a, b, c, d;
+  if (sscanf(host, "%u.%u.%u.%u", &a, &b, &c, &d) == 4) {
+    u8 bytes[4] = { (u8)a, (u8)b, (u8)c, (u8)d };
+    addr.Set(bytes);
+  } else {
+    CNetSubSystem *net = CNetSubSystem::Get();
+    if (!net) return -1;
+    CDNSClient dns(net);
+    if (!dns.Resolve(host, &addr)) return -1;
+  }
+  return (sock->Connect(addr, port) >= 0) ? 0 : -1;
+}
+
+circle_socket_t circle_net_tcp_new(void) {
+  CNetSubSystem *net = CNetSubSystem::Get();
+  if (!net) return 0;
+  CSocket *s = new CSocket(net, IPPROTO_TCP);
+  circle_socket_t h = alloc_socket(s);
+  if (!h) { delete s; return 0; }
+  return h;
+}
+
+int circle_net_send(circle_socket_t s, const void *buf, unsigned len) {
+  CSocket *sock = get_socket(s);
+  if (!sock) return -1;
+  return sock->Send(buf, len, 0);
+}
+
+int circle_net_recv(circle_socket_t s, void *buf, unsigned len) {
+  CSocket *sock = get_socket(s);
+  if (!sock || !buf || !len) return -1;
+  uint8_t *out = (uint8_t *)buf;
+  unsigned off = 0;
+  // Drain peek buffer first.
+  if (s_PeekValid[(int)s]) {
+    out[off++] = (uint8_t)s_PeekByte[(int)s];
+    s_PeekValid[(int)s] = 0;
+    if (off >= len) return (int)off;
+  }
+  int n = sock->Receive(out + off, len - off, MSG_DONTWAIT);
+  if (n < 0 && off == 0) return -1;
+  return (int)(off + (n > 0 ? (unsigned)n : 0));
+}
+
+int circle_net_can_recv(circle_socket_t s) {
+  CSocket *sock = get_socket(s);
+  if (!sock) return 0;
+  if (s_PeekValid[(int)s]) return 1;
+  // Non-blocking read of 1 byte into peek buffer.
+  char tmp;
+  int n = sock->Receive(&tmp, 1, MSG_DONTWAIT);
+  if (n > 0) {
+    s_PeekByte[(int)s]  = tmp;
+    s_PeekValid[(int)s] = 1;
+    return 1;
+  }
+  return 0;
+}
+
+void circle_net_close(circle_socket_t s) {
+  if (s < 1 || s > MAX_CIRCLE_SOCKETS) return;
+  CSocket *sock = s_Sockets[(int)s];
+  if (sock) {
+    delete sock;
+    s_Sockets[(int)s] = nullptr;
+    s_PeekValid[(int)s] = 0;
+  }
+}
+
+// Raw ethernet frame send/recv — used by TFE (CS8900A emulation).
+// Routed through the net device layer directly.
+int circle_net_send_frame(const uint8_t *f, unsigned len) {
+  CNetSubSystem *net = CNetSubSystem::Get();
+  if (!net) return 0;
+  CNetDevice *dev = CNetDevice::GetNetDevice(0);
+  if (!dev) return 0;
+  return dev->SendFrame(f, len) ? 1 : 0;
+}
+
+int circle_net_recv_frame(uint8_t *buf, unsigned *plen) {
+  CNetDevice *dev = CNetDevice::GetNetDevice(0);
+  if (!dev) return 0;
+  unsigned got = 0;
+  if (!dev->ReceiveFrame(buf, &got)) return 0;
+  if (plen) *plen = got;
+  return got > 0 ? 1 : 0;
+}
+
+void circle_net_get_mac(uint8_t mac[6]) {
+  CNetDevice *dev = CNetDevice::GetNetDevice(0);
+  if (!dev) { memset(mac, 0, 6); return; }
+  const CMACAddress *m = dev->GetMACAddress();
+  if (m) m->CopyTo(mac);
+  else memset(mac, 0, 6);
+}
+
+void circle_net_process(void) {
+  // No-op: Core 0's scheduler loop drives CNetTask continuously.
+}
+
+const char *circle_net_get_ip_str(char *buf, unsigned len) {
+  if (!buf || !len) return buf;
+  if (!static_kernel->mNetReady) { buf[0] = 0; return buf; }
+  CNetSubSystem *net = CNetSubSystem::Get();
+  if (!net || !net->IsRunning()) { buf[0] = 0; return buf; }
+  CNetConfig *cfg = net->GetConfig();
+  if (!cfg) { buf[0] = 0; return buf; }
+  const CIPAddress *ip = cfg->GetIPAddress();
+  if (!ip) { buf[0] = 0; return buf; }
+  CString s; ip->Format(&s);
+  strncpy(buf, (const char *)s, len - 1);
+  buf[len - 1] = 0;
+  return buf;
 }

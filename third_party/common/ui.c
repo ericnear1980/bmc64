@@ -55,11 +55,11 @@
 
 #else
 
-#define BG_COLOR 0
-#define FG_COLOR 1
-#define DISABLED_COLOR 11
-#define HILITE_COLOR 2
-#define BORDER_COLOR 3
+#define BG_COLOR 0        /* Black */
+#define FG_COLOR 14       /* Lavender (#6c5eb5) */
+#define DISABLED_COLOR 12 /* Medium grey */
+#define HILITE_COLOR 4    /* Purple (#6f3d86) */
+#define BORDER_COLOR 14   /* Lavender */
 #define TRANSPARENT_COLOR 16
 
 #endif
@@ -561,7 +561,7 @@ static void ui_action(long action) {
         cur->value = cur->num_choices - 1;
       }
       do_on_value_changed(menu_cursor_item[current_menu]);
-    } else if (cur->type == TOGGLE) {
+    } else if (cur->type == BMC64_TOGGLE) {
       cur->value = 1 - cur->value;
       do_on_value_changed(menu_cursor_item[current_menu]);
     } else if (cur->type == TEXTFIELD) {
@@ -596,7 +596,7 @@ static void ui_action(long action) {
         cur->value = (cur->value + 1) % cur->num_choices;
       }
       do_on_value_changed(menu_cursor_item[current_menu]);
-    } else if (cur->type == TOGGLE) {
+    } else if (cur->type == BMC64_TOGGLE) {
       cur->value = 1 - cur->value;
       do_on_value_changed(menu_cursor_item[current_menu]);
     } else if (cur->type == TEXTFIELD) {
@@ -615,7 +615,7 @@ static void ui_action(long action) {
     } else if (cur->type == CHECKBOX) {
       cur->value = 1 - cur->value;
       do_on_value_changed(menu_cursor_item[current_menu]);
-    } else if (cur->type == TOGGLE) {
+    } else if (cur->type == BMC64_TOGGLE) {
       cur->value = 1 - cur->value;
       do_on_value_changed(menu_cursor_item[current_menu]);
     } else if (cur->type == BUTTON) {
@@ -799,7 +799,7 @@ static struct menu_item *ui_new_item(struct menu_item *parent, const char *name,
 struct menu_item *ui_menu_add_toggle(int id, struct menu_item *folder,
                                      char *name, int initial_state) {
   struct menu_item *new_item = ui_new_item(folder, name, id);
-  new_item->type = TOGGLE;
+  new_item->type = BMC64_TOGGLE;
   new_item->value = initial_state;
   append(folder, new_item);
   return new_item;
@@ -927,7 +927,7 @@ static void ui_render_children(struct menu_item *node,
             ui_draw_text("-", node->menu_left + (indent)*8, y, colour);
           else
             ui_draw_text("+", node->menu_left + (indent)*8, y, colour);
-        } else if (node->type == TOGGLE) {
+        } else if (node->type == BMC64_TOGGLE) {
           if (node->value) {
             if (node->custom_toggle_label[1][0] == '\0') {
                ui_draw_text("On",

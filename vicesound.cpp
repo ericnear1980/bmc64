@@ -14,6 +14,8 @@
 // limitations under the License.
 
 #include "vicesound.h"
+#include "defs.h"
+extern "C" unsigned long circle_get_ticks(void);
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,14 +55,27 @@ void ViceSound::SetControl(int nVolume, TVCHIQSoundDestination Destination) {
 }
 
 unsigned ViceSound::AddChunk(s16 *pBuffer, unsigned nChunkSize) {
-  // nChunkSize is vice's sample count, not necessarily equal
-  // to VC4's chunk size.  Copy what we're given into our intermediate
-  // buffer and flush CHUNK_SIZE packets out of it for VC4.
+  // Rate-limit writes to at most SAMPLE_RATE samples/second using wall clock.
+  // This prevents the GPU audio hardware buffer from slowly filling when
+  // VICE runs slightly faster than real-time (~0.1% drift on Pi Zero 2W).
+  // A 2048-sample cushion permits normal bursting without audible effect.
+  static unsigned long rate_start_us = 0;
+  static unsigned long rate_total = 0;
+  if (rate_start_us == 0) {
+    rate_start_us = circle_get_ticks();
+  } else {
+    unsigned long elapsed_us = circle_get_ticks() - rate_start_us;
+    unsigned long allowed = (unsigned long long)SAMPLE_RATE * elapsed_us / 1000000 + 2048;
+    if (rate_total >= allowed) {
+      return 0;
+    }
+  }
+
   src_pos = 0;
   src_buffer = pBuffer;
+  unsigned original = nChunkSize;
 
   while (nChunkSize > 0) {
-    // This triggers the GetChunk call below. Yeild not required.
     src_size = nChunkSize;
     if (src_size > CHUNK_SIZE)
       src_size = CHUNK_SIZE;
@@ -69,6 +84,8 @@ unsigned ViceSound::AddChunk(s16 *pBuffer, unsigned nChunkSize) {
     src_pos += src_size;
     nChunkSize -= src_size;
   }
+
+  rate_total += original;
   return 0;
 }
 

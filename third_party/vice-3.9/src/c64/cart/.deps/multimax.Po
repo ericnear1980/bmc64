@@ -1,0 +1,118 @@
+multimax.o: multimax.c ../../../src/vice.h ../../../src/config.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdio.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/endian.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_endian.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/select.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_sigset.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timeval.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/timespec.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timespec.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_pthreadtypes.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/sched.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/types.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/stdio.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/string.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/strings.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/string.h \
+ c64cartsystem.h ../../../src/types.h ../../../src/vice.h \
+ /usr/lib/gcc/arm-none-eabi/14.2.1/include/stdbool.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/inttypes.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h \
+ /home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h \
+ ../../../src/c64/c64mem.h ../../../src/mem.h ../../../src/types.h \
+ ../../../src/c64/c64memrom.h ../../../src/c64/c64rom.h \
+ ../../../src/cartio.h ../../../src/cartridge.h ../../../src/sound.h \
+ ../../../src/monitor.h ../../../src/monitor/asm.h multimax.h \
+ ../../../src/c64/c64cart.h ../../../src/c64/cart/dqbb.h \
+ ../../../src/c64/cart/expert.h ../../../src/c64/cart/retroreplay.h \
+ ../../../src/c64/cart/mmc64.h ../../../src/c64/cart/mmcreplay.h \
+ ../../../src/c64/cart/ethernetcart.h ../../../src/snapshot.h \
+ ../../../src/export.h ../../../src/cartio.h ../../../src/resources.h \
+ ../../../src/ram.h ../../../src/util.h ../../../src/crt.h \
+ ../../../src/vicii/vicii-phi1.h
+../../../src/vice.h:
+../../../src/config.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdio.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/newlib.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_newlib_version.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/config.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/ieeefp.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/features.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/cdefs.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_default_types.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdarg.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/reent.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/_ansi.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/lock.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_stdint.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/endian.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/_endian.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/select.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_sigset.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timeval.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/timespec.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_timespec.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_pthreadtypes.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/sched.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/machine/types.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/stdio.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/string.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_locale.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/strings.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/string.h:
+c64cartsystem.h:
+../../../src/types.h:
+../../../src/vice.h:
+/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdbool.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/inttypes.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/sys/_intsup.h:
+/home/ericnear/bmc64-zero/third_party/circle-stdlib/install/arm-none-circle/include/stdint.h:
+../../../src/c64/c64mem.h:
+../../../src/mem.h:
+../../../src/types.h:
+../../../src/c64/c64memrom.h:
+../../../src/c64/c64rom.h:
+../../../src/cartio.h:
+../../../src/cartridge.h:
+../../../src/sound.h:
+../../../src/monitor.h:
+../../../src/monitor/asm.h:
+multimax.h:
+../../../src/c64/c64cart.h:
+../../../src/c64/cart/dqbb.h:
+../../../src/c64/cart/expert.h:
+../../../src/c64/cart/retroreplay.h:
+../../../src/c64/cart/mmc64.h:
+../../../src/c64/cart/mmcreplay.h:
+../../../src/c64/cart/ethernetcart.h:
+../../../src/snapshot.h:
+../../../src/export.h:
+../../../src/cartio.h:
+../../../src/resources.h:
+../../../src/ram.h:
+../../../src/util.h:
+../../../src/crt.h:
+../../../src/vicii/vicii-phi1.h:

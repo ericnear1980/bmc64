@@ -1,0 +1,10 @@
+#pragma once
+#include <stdio.h>
+namespace std {
+struct ios { static const int binary = 0; static const int out = 0; };
+struct ofstream {
+    void open(const char*, int) {}
+    void put(int) {}
+    void close() {}
+};
+}

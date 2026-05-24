@@ -14,8 +14,11 @@ KERNEL=kernel7.img
 elif [ "$BOARD" = "pi4" ]
 then
 KERNEL=kernel7l.img
+elif [ "$BOARD" = "pizero2w" ]
+then
+KERNEL=kernel8-32.img
 else
-echo "Need arg [pi0|pi2|pi3|pi4]"
+echo "Need arg [pi0|pi2|pi3|pi4|pizero2w]"
 exit
 fi
 
@@ -27,19 +30,25 @@ then
 fi
 cd ../..
 
-cd third_party/vice-3.3
+cd third_party/vice-3.9
 make x64
 make x128
 make xvic
 make xplus4
 make xpet
+
+# Rebuild libraries cleaned by make x64
+cd src/resid && make && cd ../..
+cd src/c64 && make && cd ../..
+cd src/userport && make && cd ../..
+cd src/imagecontents && make && cd ../..
+cd src/lib/libzmbv && make && cd ../../..
+cd src/arch/raspi && make && cd ../../..
+cd src/arch/raspi/c64 && make && cd ../../../..
+
 cd ../..
 
-cd third_party/plus4emu
-make
-cd ../..
-
-MACHINES="C64:c64 C128:c128 VIC20:vic20 Plus4:plus4 Plus4Emu:plus4emu PET:pet"
+MACHINES="C64:c64"
 
 for m in $MACHINES
 do

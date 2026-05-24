@@ -34,15 +34,19 @@
 #include <sys/types.h>
 #include <stdint.h>
 
+#ifndef MIN
 #define MIN(a,b) \
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
      _a < _b ? _a : _b; })
+#endif
 
+#ifndef MAX
 #define MAX(a,b) \
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
      _a > _b ? _a : _b; })
+#endif
 
 #define MAX_USB_DEVICES 4
 #define MAX_JOY_PORTS 4
@@ -186,11 +190,13 @@ extern unsigned int gpio_bindings[NUM_GPIO_PINS];
 // -----------------------------------------------------------------------
 // Functions called from emulator layer into kernel layer
 // -----------------------------------------------------------------------
-extern int circle_get_machine_timing();
+extern int circle_get_machine_timing(void);
 extern void circle_sleep(long);
-extern unsigned long circle_get_ticks();
-extern void circle_yield();
-extern void circle_check_gpio();
+extern unsigned long circle_get_ticks(void);
+extern void circle_yield(void);
+extern void circle_log(const char *msg);
+extern void circle_logf(const char *fmt, ...);
+extern void circle_check_gpio(void);
 extern void circle_reset_gpio(int gpio_config);
 extern int circle_alloc_fbl(int pixelmode, int layer, uint8_t **pixels,
                             int width, int height, int *pitch);
@@ -212,17 +218,17 @@ extern void circle_set_padding_fbl(int layer, double lpad, double rpad,
                                    double tpad, double bpad);
 extern void circle_set_zlayer_fbl(int layer, int zlayer);
 extern int circle_get_zlayer_fbl(int layer);
-extern void circle_lock_acquire();
-extern void circle_lock_release();
-extern void circle_boot_complete();
+extern void circle_lock_acquire(void);
+extern void circle_lock_release(void);
+extern void circle_boot_complete(void);
 extern void circle_find_usb(int (*usb)[3]);
 extern int circle_mount_usb(int usb);
 extern int circle_unmount_usb(int usb);
 extern void circle_set_volume(int value);
-extern int circle_get_model();
-extern unsigned circle_get_arm_clock();
-extern int circle_gpio_enabled();
-extern int circle_gpio_outputs_enabled();
+extern int circle_get_model(void);
+extern unsigned circle_get_arm_clock(void);
+extern int circle_gpio_enabled(void);
+extern int circle_gpio_outputs_enabled(void);
 
 extern int circle_sound_init(const char *param, int *speed, int *fragsize,
                         int *fragnr, int *channels);
@@ -262,6 +268,64 @@ extern void circle_set_shader_params(int curvature,
 			float output_gamma,
 			int sharper,
 			int bilinear_interpolation);
+
+// -----------------------------------------------------------------------
+// Network interface (TCP sockets via Circle's CNetSubSystem)
+// -----------------------------------------------------------------------
+
+// Returns 1 when network is up and DHCP has bound an address.
+extern int circle_net_is_up(void);
+
+// Socket handle type (opaque; actual type is CSocket* cast to long).
+// 0 = invalid / no socket.
+typedef long circle_socket_t;
+
+// Create a new TCP listen socket bound to the given port.
+// Returns a valid handle on success, 0 on failure (e.g. net not up).
+extern circle_socket_t circle_net_tcp_server(unsigned short port);
+
+// Accept an incoming connection on a listen socket (non-blocking).
+// Returns a valid handle for the new connection, 0 if none pending.
+extern circle_socket_t circle_net_tcp_accept(circle_socket_t server);
+
+// Connect to a remote host (blocking). Returns 1 on success, 0 on error.
+extern int circle_net_tcp_connect(circle_socket_t sock,
+                                  const char *ip, unsigned short port);
+
+// Create an unconnected TCP socket. Returns handle or 0.
+extern circle_socket_t circle_net_tcp_new(void);
+
+// Send data. Returns bytes sent (>0), 0 if would block, <0 on error.
+extern int circle_net_send(circle_socket_t sock,
+                           const void *buf, unsigned len);
+
+// Receive data (non-blocking). Returns bytes received, 0 if nothing
+// available, <0 on error/closed.
+extern int circle_net_recv(circle_socket_t sock,
+                           void *buf, unsigned len);
+
+// Returns 1 if data is available to read (non-blocking poll), 0 otherwise.
+extern int circle_net_can_recv(circle_socket_t sock);
+
+// Close and free a socket.
+extern void circle_net_close(circle_socket_t sock);
+
+// Raw Ethernet frame send/receive for TFE emulation.
+// circle_net_send_frame: returns 1 on success, 0 on failure.
+extern int circle_net_send_frame(const uint8_t *frame, unsigned len);
+// circle_net_recv_frame: returns frame length if one is available, 0 otherwise.
+// buf must be at least 1518 bytes.
+extern int circle_net_recv_frame(uint8_t *buf, unsigned *plen);
+// Get the MAC address of the network device (6 bytes).
+extern void circle_net_get_mac(uint8_t mac[6]);
+
+// Must be called regularly to drive the Circle network stack.
+// Called automatically from circle_yield().
+extern void circle_net_process(void);
+
+// Get IP address as dotted-decimal string into buf (at least 16 bytes).
+// Returns buf, or empty string if network is not up.
+extern const char *circle_net_get_ip_str(char *buf, unsigned len);
 
 // -----------------------------------------------------------------------
 // Functions called from kernel layer into emulator layer

@@ -47,6 +47,7 @@
 #include "menu_usb.h"
 #include "menu_keyset.h"
 #include "menu_switch.h"
+#include "circle.h"
 #include "menu_gpio.h"
 #include "overlay.h"
 #include "raspi_util.h"
@@ -496,14 +497,37 @@ static void show_about() {
   ui_menu_add_button(MENU_TEXT, about_root, desc);
 
 #ifdef RASPI_LITE
-  ui_menu_add_button(MENU_TEXT, about_root, "For the Rasbperry Pi Zero");
+  ui_menu_add_button(MENU_TEXT, about_root, "For the Raspberry Pi Zero");
 #else
-  ui_menu_add_button(MENU_TEXT, about_root, "For the Rasbperry Pi 2/3");
+  ui_menu_add_button(MENU_TEXT, about_root, "For the Raspberry Pi 2/3");
 #endif
 
   ui_menu_add_divider(about_root);
-  ui_menu_add_button(MENU_TEXT, about_root, "https://github.com/");
-  ui_menu_add_button(MENU_TEXT, about_root, "         randyrossi/bmc64");
+  ui_menu_add_button(MENU_TEXT, about_root, "Fork of randyrossi/bmc64");
+  ui_menu_add_button(MENU_TEXT, about_root, "github.com/ericnear1980/bmc64");
+}
+
+static void show_network_info() {
+  struct menu_item *net_root = ui_push_menu(36, 6);
+  char ip_buf[32];
+  uint8_t mac[6];
+  char line[40];
+
+  circle_net_get_ip_str(ip_buf, sizeof ip_buf);
+  circle_net_get_mac(mac);
+
+  ui_menu_add_button(MENU_TEXT, net_root, "Network Info");
+  ui_menu_add_divider(net_root);
+
+  if (ip_buf[0])
+    snprintf(line, sizeof line, "IP:  %s", ip_buf);
+  else
+    snprintf(line, sizeof line, "IP:  (not connected)");
+  ui_menu_add_button(MENU_TEXT, net_root, line);
+
+  snprintf(line, sizeof line, "MAC: %02X:%02X:%02X:%02X:%02X:%02X",
+           mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+  ui_menu_add_button(MENU_TEXT, net_root, line);
 }
 
 static void show_license() {
@@ -2470,6 +2494,9 @@ static void menu_value_changed(struct menu_item *item) {
   case MENU_ABOUT:
     show_about();
     return;
+  case MENU_NETWORK_INFO:
+    show_network_info();
+    return;
   case MENU_LICENSE:
     show_license();
     return;
@@ -3240,6 +3267,7 @@ void build_menu(struct menu_item *root) {
   ui_menu_add_button(MENU_TEXT, root, machine_info_txt);
 
   ui_menu_add_button(MENU_ABOUT, root, "About...");
+  ui_menu_add_button(MENU_NETWORK_INFO, root, "Network Info...");
   ui_menu_add_button(MENU_LICENSE, root, "License...");
 
   ui_menu_add_divider(root);

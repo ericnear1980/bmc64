@@ -444,8 +444,6 @@ void emu_set_gamepad_info(int num_pads,
   }
 }
 
-void joystick_close(void) {}
-void joystick(void) {}
 void old_joystick_init(void) {}
 void old_joystick_close(void) {}
 void old_joystick(void) {}

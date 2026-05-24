@@ -6,7 +6,8 @@ CIRCLEHOME = third_party/circle-stdlib/libs/circle
 NEWLIBDIR = third_party/circle-stdlib/install/arm-none-circle
 
 OBJS	= main.o kernel.o vicesound.o vicesoundbasedevice.o \
-          viceoptions.o viceapp.o fbl.o crt_pi_idx.o crt_pi_rgb.o
+          viceoptions.o viceapp.o fbl.o crt_pi_idx.o crt_pi_rgb.o \
+          circle_network.o tftpserver.o
 
 ifeq ($(MACHINE_CLASS),RASPI_PLUS4EMU)
 OBJS	+= plus4emulatorcore.o
@@ -16,13 +17,15 @@ endif
 
 include $(CIRCLEHOME)/Rules.mk
 
+LDFLAGS += --allow-multiple-definition
+
 ifeq ($(MACHINE_CLASS),RASPI_PLUS4EMU)
 CFLAGS  += -I "third_party/plus4emu/src"
 endif
 
 CFLAGS += -I "$(NEWLIBDIR)/include" -I $(STDDEF_INCPATH) \
           -I third_party/circle-stdlib/include \
-          -I third_party/vice-3.3/src \
+          -I third_party/vice-3.9/src \
           -I $(CIRCLEHOME)/addon/fatfs \
           -D $(MACHINE_CLASS)
 
