@@ -1211,11 +1211,10 @@ int CKernel::circle_sound_bufferspace(void) {
 }
 
 void CKernel::circle_yield(void) {
-  static unsigned nYields = 0;
-  if (++nYields == 1) {
-    FILE *f = fopen("YIELD1.TXT","w"); if(f){fwrite("ok\n",1,3,f);fclose(f);}
-  }
-  CScheduler::Get()->Yield();
+  // Core 1 (VICE) calls this every vsync. On a multicore system, Core 0
+  // runs independently — calling the Core 0 scheduler's Yield() from Core 1
+  // corrupts Core 0 task state (saves Core 1 registers into a Core 0 task
+  // block). No-op is correct: Core 0 doesn't need Core 1 to yield.
 }
 
 void CKernel::MouseStatusHandler(unsigned nButtons, int deltaX, int deltaY) {
@@ -1557,26 +1556,27 @@ void CKernel::circle_boot_complete() {
     CTimer::Get()->StartKernelTimer(2, CSMSC951xDevice::NetKernelTimer, 0, 0);
   }
 
-  // CNetInitTask runs on Core 1 (via circle_yield) only to call Initialize()
-  // which waits for PHY link-up (yields cooperatively). Once done, it sets
-  // mNetReady so Core 0's loop starts calling Process() — all USB TX from Core 0.
+  // CNetInitTask runs as a Circle task: Initialize() waits for PHY link-up,
+  // then CDHCPClient::Run() blocks until bound (or timeout/NAK). Sets mNetReady
+  // only on successful lease so Core 0 starts calling Process().
   if (CNetDevice::GetNetDevice(0)) {
     class CNetInitTask : public CTask {
     public:
       CNetInitTask(CKernel *pKernel) : CTask(0x4000), m_pKernel(pKernel) {}
       void Run() override {
-        static const u8 ip[]  = { 192, 168, 80, 164 };
-        static const u8 nm[]  = { 255, 255, 255,  0 };
-        static const u8 gw[]  = { 192, 168, 80,   1 };
-        static const u8 dns[] = { 192, 168, 80,   1 };
-        m_pKernel->mNet.GetConfig()->SetIPAddress(ip);
-        m_pKernel->mNet.GetConfig()->SetNetMask(nm);
-        m_pKernel->mNet.GetConfig()->SetDefaultGateway(gw);
-        m_pKernel->mNet.GetConfig()->SetDNSServer(dns);
+        // No static IP set — Initialize() detects null address and starts
+        // CDHCPClient internally as a background task.
         boolean bOK = m_pKernel->mNet.Initialize(TRUE);
-        if (bOK) {
-          m_pKernel->mNetReady = true;
-          new CTFTPServer(&m_pKernel->mNet);
+        if (!bOK) { Terminate(); return; }
+
+        // Poll IsRunning() (= IsBound()) up to 30s for a DHCP lease.
+        for (unsigned i = 0; i < 300; i++) {
+          if (m_pKernel->mNet.IsRunning()) {
+            m_pKernel->mNetReady = true;
+            new CTFTPServer(&m_pKernel->mNet);
+            break;
+          }
+          CScheduler::Get()->MsSleep(100);
         }
         Terminate();
       }
@@ -1764,33 +1764,8 @@ void CKernel::circle_set_shader_params(int curvature,
                         bilinear_interpolation);
 }
 
-// ── Debug logging ────────────────────────────────────────────────────────────
-// Accumulates messages in a static buffer and writes to VICE39_DEBUG.txt.
-// Used by RTL8153/AX88772 drivers and kernel networking code.
-static char s_logbuf[32768];
-static unsigned s_loglen = 0;
-
-void circle_log(const char *msg) {
-  if (!msg) return;
-  unsigned mlen = strlen(msg);
-  if (s_loglen + mlen + 2 < sizeof(s_logbuf)) {
-    memcpy(s_logbuf + s_loglen, msg, mlen);
-    s_loglen += mlen;
-    s_logbuf[s_loglen++] = '\n';
-    s_logbuf[s_loglen] = 0;
-  }
-  FILE *f = fopen("VICE39_DEBUG.txt", "w");
-  if (f) { fwrite(s_logbuf, 1, s_loglen, f); fclose(f); }
-}
-
-void circle_logf(const char *fmt, ...) {
-  char buf[512];
-  va_list args;
-  va_start(args, fmt);
-  vsnprintf(buf, sizeof(buf), fmt, args);
-  va_end(args);
-  circle_log(buf);
-}
+// Stub for unused RTL8153 driver which references circle_logf at link time.
+void circle_logf(const char *, ...) {}
 
 // ── Networking — real CSocket-based implementations ──────────────────────────
 // circle_socket_t is a 1-based index into s_Sockets[].
