@@ -29,17 +29,18 @@ This is a fork of [randyrossi/bmc64](https://github.com/randyrossi/bmc64) with t
 
 ## Network
 
-Static IP: `192.168.80.164/24`, gateway/DNS: `192.168.80.1`.  
-Set in `CNetInitTask::Run()` in `kernel.cpp`.
+DHCP — IP assigned automatically on boot. Check **Prefs → Network Info** in the menu for the assigned address. To get a stable address, reserve the Pi's MAC in your router.
 
-**TFTP** (SD card must be inserted):
+`CNetInitTask` in `kernel.cpp` calls `CNetSubSystem::Initialize()` with no static IP, which starts `CDHCPClient` internally and polls for a lease for up to 30 seconds. If no lease is granted, networking is silently skipped.
+
+**TFTP** (SD card must be inserted; replace IP with the one shown in Network Info):
 
 ```bash
 # Download a file from the Pi:
-curl -o localfile.ini tftp://192.168.80.164/vice.ini
+curl -o localfile.ini tftp://<pi-ip>/vice.ini
 
 # Upload a file to the Pi:
-curl --upload-file myfile.d64 tftp://192.168.80.164/disks/C64/myfile.d64
+curl --upload-file myfile.d64 tftp://<pi-ip>/disks/C64/myfile.d64
 ```
 
 **SwiftLink virtual modem** — enable `Acia1Enable=1` in `vice.ini`:
