@@ -50,7 +50,14 @@ int archdep_path_is_relative(const char *path)
         return 1;   /* yup, */
     }
 
-#if defined(UNIX_COMPILE) || defined(BEOS_COMPILE)
+#if defined(RASPI_COMPILE)
+    /* Circle uses FatFs volume prefixes like "SD:", "USB:", "USB2:", "USB3:".
+     * These start with a letter followed by ':', so treat them as absolute. */
+    if (strchr(path, ':') != NULL) {
+        return 0;
+    }
+    return *path != '/';
+#elif defined(UNIX_COMPILE) || defined(BEOS_COMPILE)
     return *path != '/';
 #elif defined(WINDOWS_COMPILE)
     if (*path == '\\' || *path == '/') {
