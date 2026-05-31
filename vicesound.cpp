@@ -95,11 +95,9 @@ unsigned ViceSound::GetChunk(s16 *pBuffer, unsigned nChunkSize) {
   assert(nChunkSize > 0);
   assert((nChunkSize & 1) == 0);
 
-  // VICE expects us to 'block' if our buffer is full. But
-  // this shouldn't happen.
-  while (bytes_buffered >= FRAG_SIZE * NUM_FRAGS * BYTES_PER_SAMPLE) {
-    CScheduler::Get()->Yield();
-  }
+  // On multicore, the GPU drains bytes_buffered via Core 0 COMPLETE
+  // callbacks independently — no yield needed. Yielding the Core 0
+  // scheduler from Core 1 (VICE) corrupts Core 0 task state.
 
   if (src_buffer == 0 || src_size == 0) {
     // Nothing to give? Give a silent packet.
@@ -121,5 +119,11 @@ void ViceSound::AmountBufferedBytes(unsigned nBytes) {
 // Return value is in samples.
 unsigned ViceSound::BufferSpaceSamples() {
   int left = FRAG_SIZE * NUM_FRAGS - bytes_buffered / BYTES_PER_SAMPLE / num_channels;
-  return left < 0 ? 0 : left;
+  // Never return less than one fragment (FRAG_SIZE * channels). If we return 0,
+  // VICE enters a tick_sleep busy-wait loop with no CScheduler::Yield calls.
+  // The VCHIQ COMPLETE callbacks need Yield to fire and drain bytes_buffered,
+  // so returning 0 causes a permanent deadlock. The rate limiter in AddChunk
+  // handles actual overspeed; VCHIQ BLOCK_UNTIL_QUEUED handles GPU backpressure.
+  int min_space = FRAG_SIZE * num_channels;
+  return (unsigned)(left < min_space ? min_space : left);
 }

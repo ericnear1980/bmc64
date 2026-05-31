@@ -190,7 +190,6 @@ static void vice_banner(void)
 /* This is the main program entry point.  Call this from `main()'.  */
 int main_program(int argc, char **argv)
 {
-    extern void circle_log(const char *msg);
     int i, n;
     int reserr;
     char *cmdline;

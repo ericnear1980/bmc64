@@ -199,9 +199,7 @@ static void vicii_set_geometry(void)
 static int init_raster(void)
 {
     raster_t *raster;
-    extern void circle_log(const char *msg);
 
-    circle_log("init_raster ENTRY");
     raster = &vicii.raster;
 
     raster->sprite_status = NULL;
@@ -209,33 +207,24 @@ static int init_raster(void)
 
     /* We only use the dummy mode for "drawing" to raster.
        Report only 1 video mode and set the idle mode to it. */
-    circle_log("init_raster: before raster_init");
     if (raster_init(raster, 1) < 0) {
-        circle_log("init_raster: raster_init FAILED");
         return -1;
     }
-    circle_log("init_raster: raster_init OK");
     raster_modes_set_idle_mode(raster->modes, VICII_DUMMY_MODE);
 
     resources_touch("VICIIVideoCache");
 
-    circle_log("init_raster: before vicii_set_geometry");
     vicii_set_geometry();
-    circle_log("init_raster: after vicii_set_geometry");
 
     if (vicii_color_update_palette(raster->canvas) < 0) {
-        circle_log("init_raster: vicii_color_update_palette FAILED");
         log_error(vicii.log, "Cannot load palette.");
         return -1;
     }
-    circle_log("init_raster: palette OK, before raster_realize");
 
     if (raster_realize(raster) < 0) {
-        circle_log("init_raster: raster_realize FAILED");
         return -1;
     }
 
-    circle_log("init_raster: done OK");
     return 0;
 }
 

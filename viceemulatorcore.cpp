@@ -28,6 +28,7 @@ extern "C" {
 extern void circle_kernel_core_init_complete(int core);
 }
 
+
 #include "third_party/vice-3.9/src/sid/sid.h"
 #include "third_party/vice-3.9/src/resid/sid.h"
 #include "third_party/vice-3.9/src/resid/filter.h"
