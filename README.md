@@ -99,7 +99,7 @@ Copy `kernel8-32.img` to the SD card root as both `kernel8-32.img` and `kernel8-
 ├── cmdline.txt         fast=true machine_timing=ntsc-hdmi scaling_params=... audio_out=hdmi
 ├── vice.ini            SidModel=0 SidStereo=0 Acia1Enable=1 KeymapIndex=1
 ├── kernel8-32.img      boot kernel
-├── kernel8-32.img.c64  same file, required for machine switching
+├── kernel8-32-safe.img known-good backup kernel (see Safe Boot below)
 ├── C64/
 │   ├── kernal
 │   ├── basic
@@ -120,6 +120,23 @@ Copy `kernel8-32.img` to the SD card root as both `kernel8-32.img` and `kernel8-
 ```
 
 File browser looks in `/disks/C64`, `/carts/C64`, `/tapes/C64` by default (configurable via "Files Location Convention" in the Prefs menu — the alternative is `/C64/disks`, `/C64/carts`, etc.).
+
+---
+
+## Safe Boot / Kernel Recovery
+
+A backup kernel slot (`kernel8-32-safe.img`) provides hardware recovery from a bad kernel push without SD card removal.
+
+**Normal push** via `bmc_sync_to_pi.sh --kernel kernel8-32.img`:
+- Downloads the current `kernel8-32.img` from the Pi and saves it as `kernel8-32-safe.img`
+- Uploads the new kernel as `kernel8-32.img`
+
+**Recovery**: hold the joystick fire button (either port, GPIO23 or GPIO19) while powering on. The kernel detects this before any emulation starts, copies `kernel8-32-safe.img` over `kernel8-32.img`, and reboots into the good kernel.
+
+**Manual recovery** (if Pi won't boot at all): insert SD card into host, run:
+```bash
+cp /media/$USER/BMC64/kernel8-32-safe.img /media/$USER/BMC64/kernel8-32.img
+```
 
 ---
 
