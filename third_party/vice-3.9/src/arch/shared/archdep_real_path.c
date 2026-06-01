@@ -79,16 +79,20 @@ char *archdep_real_path(const char *pathname, char *resolved_pathname)
  */
 int archdep_real_path_equal(const char *path1, const char *path2)
 {
-#ifdef WINDOWS_COMPILE
+#ifdef RASPI_COMPILE
+    /* Our realpath() stub is an identity function — paths are already
+     * in canonical form. Skip the 8KB stack allocation and compare directly. */
+    if (!path1 || !path2) return 0;
+    return !strcmp(path1, path2);
+#elif defined(WINDOWS_COMPILE)
     char path1_norm[_MAX_PATH], path2_norm[_MAX_PATH];
+    if (!archdep_real_path(path1, path1_norm)) return 0;
+    if (!archdep_real_path(path2, path2_norm)) return 0;
+    return !strcmp(path1_norm, path2_norm);
 #else
     char path1_norm[PATH_MAX], path2_norm[PATH_MAX];
-#endif
-    if (!archdep_real_path(path1, path1_norm)) {
-        return 0;
-    }
-    if (!archdep_real_path(path2, path2_norm)) {
-        return 0;
-    }
+    if (!archdep_real_path(path1, path1_norm)) return 0;
+    if (!archdep_real_path(path2, path2_norm)) return 0;
     return !strcmp(path1_norm, path2_norm);
+#endif
 }

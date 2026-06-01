@@ -15,6 +15,9 @@
 
 #include "viceapp.h"
 #include <circle/netdevice.h>
+#include <circle/gpiopin.h>
+#include <circle/startup.h>
+#include <ff.h>
 
 #include "fbl.h"
 
@@ -493,6 +496,32 @@ bool ViceStdioApp::Initialize(void) {
     mLogger.Write(GetKernelName(), LogError, "Cannot mount partition: %s",
                   fatFsVol);
     return false;
+  }
+
+  // Safe-mode boot: if fire button (GPIO23) is held at power-on,
+  // copy kernel8-32-safe.img over kernel8-32.img and reboot.
+  {
+    CGPIOPin firePin1(23, GPIOModeInputPullUp, &mGPIOManager); // bank 1 fire
+    CGPIOPin firePin2(19, GPIOModeInputPullUp, &mGPIOManager); // bank 2 fire
+    if (firePin1.Read() == LOW || firePin2.Read() == LOW) {
+      mLogger.Write(GetKernelName(), LogNotice,
+                    "Safe mode: restoring kernel8-32.img from safe backup...");
+      FIL src, dst;
+      if (f_open(&src, "/kernel8-32-safe.img", FA_READ) == FR_OK) {
+        if (f_open(&dst, "/kernel8-32.img", FA_WRITE | FA_CREATE_ALWAYS) == FR_OK) {
+          static uint8_t buf[4096];
+          UINT br, bw;
+          while (f_read(&src, buf, sizeof(buf), &br) == FR_OK && br > 0) {
+            f_write(&dst, buf, br, &bw);
+          }
+          f_close(&dst);
+          mLogger.Write(GetKernelName(), LogNotice,
+                        "Safe mode: kernel restored, rebooting...");
+        }
+        f_close(&src);
+      }
+      reboot();
+    }
   }
 
   InitBootStat();

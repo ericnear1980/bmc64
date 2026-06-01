@@ -510,10 +510,10 @@ void vsyncarch_postsync(void) {
       }
     } else {
       switch (pending_emu_joy.type[i]) {
-      // NOTE: VICE's joystick_set_value functions have ports indexed starting
-      // at 1 but our pot functions are indexed at 0. Hence -1.
+      // NOTE: VICE 3.9 joyports are 0-indexed (JOYPORT_1=0, JOYPORT_2=1).
+      // Our pending port values are 1-indexed, so subtract 1 for all VICE calls.
       case PENDING_EMU_JOY_TYPE_ABSOLUTE:
-        joystick_set_value_absolute(pending_emu_joy.port[i],
+        joystick_set_value_absolute(pending_emu_joy.port[i]-1,
                                   pending_emu_joy.value[i] & 0x1f);
         joyport_io_sim_set_potx((pending_emu_joy.value[i] & POTX_BIT_MASK) >> 5,
                                 pending_emu_joy.port[i]-1);
@@ -521,7 +521,7 @@ void vsyncarch_postsync(void) {
                                 pending_emu_joy.port[i]-1);
         break;
       case PENDING_EMU_JOY_TYPE_AND:
-        joystick_set_value_and(pending_emu_joy.port[i],
+        joystick_set_value_and(pending_emu_joy.port[i]-1,
                              pending_emu_joy.value[i] & 0x1f);
         joyport_io_sim_set_potx((pending_emu_joy.value[i] & POTX_BIT_MASK) >> 5,
                                 pending_emu_joy.port[i]-1);
@@ -529,7 +529,7 @@ void vsyncarch_postsync(void) {
                                 pending_emu_joy.port[i]-1);
         break;
       case PENDING_EMU_JOY_TYPE_OR:
-        joystick_set_value_or(pending_emu_joy.port[i],
+        joystick_set_value_or(pending_emu_joy.port[i]-1,
                             pending_emu_joy.value[i] & 0x1f);
         joyport_io_sim_set_potx((pending_emu_joy.value[i] & POTX_BIT_MASK) >> 5,
                                 pending_emu_joy.port[i]-1);
