@@ -45,10 +45,11 @@ cd src/imagecontents && make && cd ../..
 cd src/lib/libzmbv && make && cd ../../..
 cd src/arch/raspi && make && cd ../../..
 cd src/arch/raspi/c64 && make && cd ../../../..
+cd src/arch/raspi/vic20 && make && cd ../../../..
 
 cd ../..
 
-MACHINES="C64:c64"
+MACHINES="C64:c64 VIC20:vic20"
 
 for m in $MACHINES
 do

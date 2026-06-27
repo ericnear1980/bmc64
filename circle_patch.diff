@@ -677,3 +677,15 @@ index 94954f7..df18eb8 100644
  	CKeyboardBehaviour m_Behaviour;
  
  	TKeyStatusHandlerRaw *m_pKeyStatusHandlerRaw;
+diff --git a/addon/vc4/interface/khronos/common/khrn_options.c b/addon/vc4/interface/khronos/common/khrn_options.c
+index fafb7df3..3e213abd 100644
+--- a/addon/vc4/interface/khronos/common/khrn_options.c
++++ b/addon/vc4/interface/khronos/common/khrn_options.c
+@@ -29,6 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #ifdef __circle__
+ #include <linux/kernel.h>
++#include <string.h>
+ #else
+ #include <memory.h>
+ #include <stdlib.h>
