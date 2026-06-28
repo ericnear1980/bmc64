@@ -1,9 +1,9 @@
-# BMC64 — VICE 3.9 / Pi Zero 2W Fork
+# BMC64  -  VICE 3.9 / Pi Zero 2W Fork
 
 This is a fork of [randyrossi/bmc64](https://github.com/randyrossi/bmc64) with two primary goals:
 
-1. **VICE 3.9** — upgrade from VICE 3.3 to VICE 3.9 (released 2024-12-24), gaining the binary remote monitor protocol, ethernet/TFE emulation, and six years of emulation improvements.
-2. **Raspberry Pi Zero 2W** — primary test target is the Pi Zero 2W (BCM2710A1, quad-core Cortex-A53). Uses the Pi 3 code path.
+1. **VICE 3.9**  -  upgrade from VICE 3.3 to VICE 3.9 (released 2024-12-24), gaining the binary remote monitor protocol, ethernet/TFE emulation, and six years of emulation improvements.
+2. **Raspberry Pi Zero 2W**  -  primary test target is the Pi Zero 2W (BCM2710A1, quad-core Cortex-A53). Uses the Pi 3 code path.
 
 **C64 only.** C128, VIC20, Plus/4, and PET are out of scope for this fork.
 
@@ -14,22 +14,22 @@ This is a fork of [randyrossi/bmc64](https://github.com/randyrossi/bmc64) with t
 **Fully working on Pi Zero 2W and Pi 3:**
 
 - C64 boots to READY screen
-- Display — NTSC, 720p@60Hz HDMI
-- Audio — HDMI, 6581 SID (reSID, Fast Resampling)
+- Display  -  NTSC, 720p@60Hz HDMI
+- Audio  -  HDMI, 6581 SID (reSID, Fast Resampling)
 - GPIO keyboard PCB (gpio_config=1) and USB keyboard
 - Positional keymap (`rpi_pos.vkm`) as default
 - Cartridge loading (CRT, 8K, 16K, Ultimax)
 - Disk and tape loading
-- SwiftLink/ACIA virtual modem — Hayes AT commands, DNS, TCP BBS
+- SwiftLink/ACIA virtual modem  -  Hayes AT commands, DNS, TCP BBS
 - TFE ethernet (CS8900A) menu toggle
-- SMSC951x (LAN9514) onboard Ethernet — ping, TFTP, TCP confirmed
-- TFTP server on port 69 — upload/download files to SD card over the network
+- SMSC951x (LAN9514) onboard Ethernet  -  ping, TFTP, TCP confirmed
+- TFTP server on port 69  -  upload/download files to SD card over the network
 
 ---
 
 ## Network
 
-DHCP — IP assigned automatically on boot. Check **Prefs → Network Info** in the menu for the assigned address. To get a stable address, reserve the Pi's MAC in your router.
+DHCP  -  IP assigned automatically on boot. Check **Prefs → Network Info** in the menu for the assigned address. To get a stable address, reserve the Pi's MAC in your router.
 
 `CNetInitTask` in `kernel.cpp` calls `CNetSubSystem::Initialize()` with no static IP, which starts `CDHCPClient` internally and polls for a lease for up to 30 seconds. If no lease is granted, networking is silently skipped.
 
@@ -43,7 +43,7 @@ curl -o localfile.ini tftp://<pi-ip>/vice.ini
 curl --upload-file myfile.d64 tftp://<pi-ip>/disks/C64/myfile.d64
 ```
 
-**SwiftLink virtual modem** — enable `Acia1Enable=1` in `vice.ini`:
+**SwiftLink virtual modem**  -  enable `Acia1Enable=1` in `vice.ini`:
 
 ```
 ATZ          → OK
@@ -119,7 +119,7 @@ Copy `kernel8-32.img` to the SD card root as both `kernel8-32.img` and `kernel8-
     └── C64/
 ```
 
-File browser looks in `/disks/C64`, `/carts/C64`, `/tapes/C64` by default (configurable via "Files Location Convention" in the Prefs menu — the alternative is `/C64/disks`, `/C64/carts`, etc.).
+File browser looks in `/disks/C64`, `/carts/C64`, `/tapes/C64` by default (configurable via "Files Location Convention" in the Prefs menu  -  the alternative is `/C64/disks`, `/C64/carts`, etc.).
 
 ---
 
@@ -149,7 +149,7 @@ fast=true machine_timing=ntsc-hdmi scaling_params=384,240,1152,720 audio_out=hdm
 
 **`vice.ini`** (important settings for this fork):
 ```
-MachineVideoStandard=1    ; NTSC — PAL-N causes audio drift/freeze
+MachineVideoStandard=1    ; NTSC  -  PAL-N causes audio drift/freeze
 SidModel=0                ; 6581
 SidStereo=0
 Acia1Enable=1             ; SwiftLink virtual modem
@@ -161,18 +161,18 @@ KeymapUserPosFile="rpi_maxi_pos.vkm"
 
 ## Known Limitations
 
-- **No hot-plug** — all USB devices must be connected before power-on.
-- **C64 only** — other machine types are not built or supported in this fork.
-- **Pi 5 not supported** — requires AArch64 and a full display/audio rewrite.
+- **No hot-plug**  -  all USB devices must be connected before power-on.
+- **C64 only**  -  other machine types are not built or supported in this fork.
+- **Pi 5 not supported**  -  requires AArch64 and a full display/audio rewrite.
 - USB gamepad support is limited; not all gamepads will work.
 
 ---
 
 ## Keyboard
 
-- **F12** — open/close menu
-- **ESC / RUNSTOP** — exit menu
-- **Commodore Key + F7** — alternate menu toggle (real keyboard)
+- **F12**  -  open/close menu
+- **ESC / RUNSTOP**  -  exit menu
+- **Commodore Key + F7**  -  alternate menu toggle (real keyboard)
 
 | Usage         | Mapping           |
 |---------------|-------------------|
@@ -189,18 +189,18 @@ KeymapUserPosFile="rpi_maxi_pos.vkm"
 | 1      | Menu nav buttons + real joysticks    |
 | 2      | Real keyboard + real joysticks (PCB) |
 | 3      | Waveshare Game HAT                   |
-| 4      | Userport outputs + joysticks (dangerous — see below) |
+| 4      | Userport outputs + joysticks (dangerous  -  see below) |
 | 5      | Custom defined                       |
 
 Set via `gpio_config=N` in `settings.txt` (0-indexed: Config 2 = `gpio_config=1`).
 
-**Config 4 warning:** capable of driving GPIO pins as 3.3V outputs. Never use with the keyboard PCB attached — direct pin-to-pin shorts will damage the GPIO.  Requires `enable_gpio_outputs=true` in `cmdline.txt` to unlock from the menu.
+**Config 4 warning:** capable of driving GPIO pins as 3.3V outputs. Never use with the keyboard PCB attached  -  direct pin-to-pin shorts will damage the GPIO.  Requires `enable_gpio_outputs=true` in `cmdline.txt` to unlock from the menu.
 
 ---
 
 ## Video
 
-Scaling and timing work the same as upstream BMC64 — see the [upstream README](https://github.com/randyrossi/bmc64/blob/master/README.md) for full detail on custom HDMI modes, integer scaling, DPI, and the CRT shader. Key points for this fork:
+Scaling and timing work the same as upstream BMC64  -  see the [upstream README](https://github.com/randyrossi/bmc64/blob/master/README.md) for full detail on custom HDMI modes, integer scaling, DPI, and the CRT shader. Key points for this fork:
 
 - NTSC (`machine_timing=ntsc-hdmi`) is the tested/recommended mode.
 - CRT shader is automatically disabled on Pi 4+ (`circle_get_model() > 3`).
@@ -211,7 +211,7 @@ Scaling and timing work the same as upstream BMC64 — see the [upstream README]
 ## Audio
 
 - ReSID, Fast Resampling, 6581 model.
-- `audio_out=hdmi` in `cmdline.txt` is required — auto-detection misses HDMI on Pi Zero 2W.
+- `audio_out=hdmi` in `cmdline.txt` is required  -  auto-detection misses HDMI on Pi Zero 2W.
 - A wall-clock rate limiter in `ViceSound::AddChunk` prevents the GPU audio buffer from filling when VICE runs slightly faster than real-time (~0.1% on Pi Zero 2W).
 
 ---
@@ -221,3 +221,5 @@ Scaling and timing work the same as upstream BMC64 — see the [upstream README]
 For pre-compiled images, changelog, and full documentation for the multi-machine upstream build:  
 [https://github.com/randyrossi/bmc64](https://github.com/randyrossi/bmc64)  
 [https://accentual.com/bmc64](https://accentual.com/bmc64)
+-e 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/N5T0211UR6)

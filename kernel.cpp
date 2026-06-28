@@ -1550,12 +1550,6 @@ void CKernel::circle_boot_complete() {
 
   CLogger::Get()->RegisterPanicHandler(PanicHandler);
 
-  // Register the SMSC951x RX timer after VCHIQ is stable.
-  // TX uses blocking Transfer() from Core 1, so no TX timer needed.
-  if (CNetDevice::GetNetDevice(0)) {
-    CTimer::Get()->StartKernelTimer(2, CSMSC951xDevice::NetKernelTimer, 0, 0);
-  }
-
   // CNetInitTask runs as a Circle task: Initialize() waits for PHY link-up,
   // then CDHCPClient::Run() blocks until bound (or timeout/NAK). Sets mNetReady
   // only on successful lease so Core 0 starts calling Process().

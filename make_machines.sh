@@ -31,21 +31,39 @@ fi
 cd ../..
 
 cd third_party/vice-3.9
-make x64
-make x128
-make xvic
-make xplus4
-make xpet
 
-# Rebuild libraries cleaned by make x64
-cd src/resid && make && cd ../..
-cd src/c64 && make && cd ../..
-cd src/userport && make && cd ../..
-cd src/imagecontents && make && cd ../..
-cd src/lib/libzmbv && make && cd ../../..
-cd src/arch/raspi && make && cd ../../..
-cd src/arch/raspi/c64 && make && cd ../../../..
-cd src/arch/raspi/vic20 && make && cd ../../../..
+# Prevent make from trying to regenerate autoconf/automake outputs.
+# Touch Makefile last so it appears newer than Makefile.in (prevents
+# config.status re-running configure, which would fail without the
+# special LEXLIB/LEX env vars that were set during make_all.sh).
+find . \( -name 'aclocal.m4' -o -name 'configure' -o -name 'config.status' -o -name 'Makefile.in' -o -name 'Makefile' \) -not -path '*/\.git/*' | xargs touch
+
+# --keep-going lets make continue past rawnet sub-configure failure
+# (rawnet requires dos2unix which may not be installed) so the
+# top-level src/*.o objects still get compiled.
+make --keep-going x64
+make --keep-going x128
+make --keep-going xvic
+make --keep-going xplus4
+make --keep-going xpet
+
+# Rebuild libraries cleaned by make x64.
+# Use subshells so a make failure doesn't strand us in a subdirectory.
+(cd src && make)
+(cd src/resid && make)
+(cd src/c64 && make)
+(cd src/userport && make)
+(cd src/imagecontents && make)
+(cd src/lib/libzmbv && make)
+(cd src/sounddrv && make)
+(cd src/mididrv && make)
+(cd src/socketdrv && make)
+(cd src/hwsiddrv && make)
+(cd src/iodrv && make)
+(cd src/rtc && make)
+(cd src/arch/raspi && make)
+(cd src/arch/raspi/c64 && make)
+(cd src/arch/raspi/vic20 && make)
 
 cd ../..
 
