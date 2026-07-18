@@ -63,11 +63,10 @@ make --keep-going xpet
 (cd src/rtc && make)
 (cd src/arch/raspi && make)
 (cd src/arch/raspi/c64 && make)
-(cd src/arch/raspi/vic20 && make)
 
 cd ../..
 
-MACHINES="C64:c64 VIC20:vic20"
+MACHINES="C64:c64"
 
 for m in $MACHINES
 do

@@ -15,12 +15,12 @@ Pi 5 support is deferred  -  it requires mandatory 64-bit (AArch64) and a comple
 
 ## Current Status
 
-**VICE 3.9 C64 build is fully working on Pi Zero 2W.** C64-only. Other machine types are out of scope for this fork.
+**VICE 3.9 C64 build working on Pi 3 (composite output).** Primary test target is a Pi 3 with TRRS composite video + analog audio. C64 only.
 
 Working:
 - C64 boots to READY screen ✓
-- Display stable (NTSC, 720p@60Hz HDMI) ✓
-- Audio working (HDMI, 6581 SID) ✓
+- Display stable (NTSC composite, 480p@60Hz) ✓
+- Audio working (analog via TRRS 3.5mm jack) ✓
 - GPIO keyboard PCB (gpio_config=1) working ✓
 - USB keyboard working ✓
 - Positional keymap (rpi_pos.vkm) as default ✓
@@ -114,7 +114,7 @@ Only C64 is built: `MACHINES="C64:c64"` in `make_machines.sh`.
 | Pi Zero 2W  | `pizero2w`  | `kernel8-32.img`  |
 | Pi 4        | `pi4`       | `kernel7l.img`    |
 
-`make_machines.sh` appends `.c64` suffix. Copy `kernel8-32.img.c64` → `kernel8-32.img` on SD card.
+`make_machines.sh` appends machine suffix. Copy `kernel8-32.img.c64` → `kernel8-32.img` on SD card to boot C64. The VIC-20 kernel (`kernel8-32.img.vic20`) is deployed alongside it and selected via the BMC64 Machine menu.
 
 ### Pi Zero 2W notes
 
@@ -266,12 +266,13 @@ JiffyDOS ROM files are installed in `bmc64-sdcard/C64/`:
 
 Activated via `bmc64-sdcard/vice.ini` under `[C64]`:
 ```
+KernalRev=-1
 KernalName=jiffydos_kernal
-DosName1541ii=jiffydos_1541
-Drive8Type=1541II
+DosName1541ii=JiffyDOS_1541-II
+Drive8Type=1542
 ```
 
-The JiffyDOS 1541 ROM is the **1541-II variant** (ROM starts with `$97`). Use `DosName1541ii` and `Drive8Type=1541II`, not `DosName1541`/`Drive8Type=1541`  -  VICE validates the ROM signature against the drive type and will reject a 1541-II ROM loaded as a plain 1541.
+The JiffyDOS 1541 ROM is the **1541-II variant** (ROM starts with `$97`). Use `DosName1541ii` and `Drive8Type=1542` (numeric), not `DosName1541`/`Drive8Type=1541`  -  VICE validates the ROM signature against the drive type and will reject a 1541-II ROM loaded as a plain 1541. `Drive8Type` is an integer resource; `atoi("1541II")` silently returns 1541, so always use the numeric value 1542. `KernalRev=-1` (UNKNOWN) is required for non-stock kernals  -  using `KernalRev=2` causes VICE to reject the JiffyDOS ROM on checksum mismatch.
 
 ROM filenames in `vice.ini` must be bare names (no path prefix)  -  BMC64 resolves them relative to the machine ROM directory (`/C64/` on the SD card).
 
@@ -284,5 +285,7 @@ Avoid em dashes. Use parenthetical phrases or split sentences instead.
 *Also 2026-05-30  -  Added JiffyDOS support to bmc64-sdcard: copied ROM files to C64/ directory, configured vice.ini with KernalName=jiffydos_kernal, DosName1541ii=jiffydos_1541, Drive8Type=1541II (1541-II variant required). Tracked reference copy at sdcard/vice.ini.*
 
 *Also 2026-05-25  -  Fixed two bugs: (1) Cartridge loading broken  -  `archdep_path_is_relative` (`third_party/vice-3.9/src/arch/shared/archdep_path_is_relative.c`) returned true for Circle FatFs volume-prefixed paths like `SD:/carts/foo.crt` (starts with `S`, not `/`), causing `archdep_expand_path` to mangle them into `//SD:/carts/foo.crt`. Fix: added `RASPI_COMPILE` guard that treats any path containing `:` as absolute. (2) Audio idle freeze  -  `ViceSound::BufferSpaceSamples()` (`vicesound.cpp`) was allowed to return 0, causing VICE's `sound.c` busy-wait loop (`tick_sleep`) to deadlock VCHIQ COMPLETE callbacks. Fix: clamp return value to minimum `FRAG_SIZE * num_channels`. Also added wall-clock rate limiter in `ViceSound::AddChunk` to prevent GPU audio buffer overfill from ~0.1% VICE overspeed on Pi Zero 2W.*
+
+*Also 2026-06-28  -  Switched primary target from Pi Zero 2W to Pi 3 (TRRS composite output). Removed HDMI options from machines.txt (composite-only). VIC-20 support attempted and abandoned. bmc_sync_to_pi.sh updated: dynamic transfer timeout scaled by file size, --c64reset option to restore safe C64 kernel and config files. Updated sdcard/vice.ini to fix JiffyDOS resource names (KernalRev=-1, DosName1541ii=JiffyDOS_1541-II, Drive8Type=1542).*
 
 *Also 2026-05-26  -  Four changes: (1) DHCP: replaced static IP (192.168.80.164) in CNetInitTask (`kernel.cpp`) with DHCP  -  no static IP set means CNetSubSystem::Initialize() starts CDHCPClient internally; polls IsRunning() up to 30s then sets mNetReady and starts TFTP server. (2) Formatted new 119GB SD card as FAT32 (label BMC64), populated from ~/BMC64/ reference layout + freshly built kernel + ~/bmc64-sdcard/ user files. (3) nbz2nib tool (`~/scripts/nbz2nib`)  -  standalone C binary built from nibtools lz.c (no opencbm dependency) that decompresses .nbz (LZ77-compressed NIB) to .nib; source at /tmp/nibtools/nbz2nib.c. (4) nbz_convert.sh (`~/scripts/nbz_convert.sh`)  -  batch converts directory of .nbz files to .nib with BMC64 filename normalization, outputs to ~/bmc64-sdcard/disks/C64/. Note: nbz2nib binary lives outside the repo in ~/scripts/ and must be rebuilt if lost (source in /tmp/nibtools/ which is ephemeral  -  keep nbz2nib.c).*
